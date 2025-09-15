@@ -1,0 +1,29 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+  "dockerComposeFile": "docker-compose.yml",
+  "workspaceFolder": "/code",
+  "service": "app",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "openai.openai-chatgpt-adhoc",
+        "Continue.continue",
+        "vikas.code-navigation",
+        "streetsidesoftware.code-spell-checker",
+        "codeandstuff.package-json-upgrade",
+        "AndyGongea.update-now"
+      ]
+    },
+    "jetbrains": {
+      "backend": "WebStorm"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/flexwie/devcontainer-features/pulumi:1": {}
+  },
+  "name": "Drunk-Pulumi-CloudFlare"
+}
