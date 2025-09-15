@@ -1,4 +1,4 @@
-name: pulumi-test
+name: pulumi-cloudflare-components-test
 description: A minimal TypeScript Pulumi program
 runtime:
   name: nodejs
