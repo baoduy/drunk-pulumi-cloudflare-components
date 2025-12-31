@@ -1,7 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 
 export function getComponentResourceType(type: string) {
-  return type.includes('drunk-pulumi') ? type : `drunk:pulumi:${type}`;
+  return type.includes('drunk:pulumi:cf:') ? type : `drunk:pulumi:cf:${type}`;
 }
 
 /**
@@ -25,7 +25,7 @@ export abstract class BaseComponent<TArgs extends pulumi.Inputs> extends pulumi.
    * @param args - Configuration arguments for this component
    * @param opts - Optional Pulumi resource options to control component behavior
    */
-  constructor(
+  protected constructor(
     type: string,
     public readonly name: string,
     protected readonly args: TArgs,
@@ -37,7 +37,6 @@ export abstract class BaseComponent<TArgs extends pulumi.Inputs> extends pulumi.
   /**
    * Registers component outputs with the Pulumi engine.
    * This method should be overridden by derived classes to ensure proper output registration.
-   * @param outputs - The outputs to register for this component
    */
   protected registerOutputs(): void {
     super.registerOutputs(this.getOutputs());
