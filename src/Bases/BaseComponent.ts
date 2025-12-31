@@ -1,7 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 
 export function getComponentResourceType(type: string) {
-  return type.includes('drunk:pulumi:cf:') ? type : `drunk:pulumi:cf:${type}`;
+  return type.includes('drunk:cloudflare:') ? type : `drunk:cloudflare:${type}`;
 }
 
 /**
@@ -18,6 +18,9 @@ export function getComponentResourceType(type: string) {
  * const component = new MyComponent('name', args);
  */
 export abstract class BaseComponent<TArgs extends pulumi.Inputs> extends pulumi.ComponentResource<TArgs> {
+  protected readonly accountId?:pulumi.Output<string>;
+  protected readonly zoneId?:pulumi.Output<string>;
+
   /**
    * Creates a new instance of BaseComponent
    * @param type - The resource type identifier for this component
@@ -32,14 +35,10 @@ export abstract class BaseComponent<TArgs extends pulumi.Inputs> extends pulumi.
     protected readonly opts?: pulumi.ComponentResourceOptions,
   ) {
     super(getComponentResourceType(type), name, args, opts);
-  }
+    //get cloudflare account Id and zone Id from environment variables.
+    this.accountId = process.env.CLOUDFLARE_ACCOUNT_ID?pulumi.secret(process.env.CLOUDFLARE_ACCOUNT_ID):undefined;
+    this.zoneId = process.env.CLOUDFLARE_ZONE_ID?pulumi.secret(process.env.CLOUDFLARE_ZONE_ID):undefined;
 
-  /**
-   * Registers component outputs with the Pulumi engine.
-   * This method should be overridden by derived classes to ensure proper output registration.
-   */
-  protected registerOutputs(): void {
-    super.registerOutputs(this.getOutputs());
   }
 
   /**
@@ -48,4 +47,12 @@ export abstract class BaseComponent<TArgs extends pulumi.Inputs> extends pulumi.
    * @returns An object containing the component's outputs, either as direct values or Pulumi outputs
    */
   public abstract getOutputs(): pulumi.Inputs | pulumi.Output<pulumi.Inputs>;
+
+  /**
+   * Registers component outputs with the Pulumi engine.
+   * This method should be overridden by derived classes to ensure proper output registration.
+   */
+  protected registerOutputs(): void {
+    super.registerOutputs(this.getOutputs());
+  }
 }

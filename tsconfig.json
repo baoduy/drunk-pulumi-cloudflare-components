@@ -29,7 +29,7 @@
     "src/Bases/index.ts",
     "src/Certificates/OriginCert.ts",
     "src/Certificates/index.ts",
-    "src/CloudflareAccount.ts",
+    "src/CloudflareZeroTrustAccount.ts",
     "src/index.ts",
     "src/types.ts"
   ]
