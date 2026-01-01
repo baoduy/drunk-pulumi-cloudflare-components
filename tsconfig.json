@@ -23,14 +23,20 @@
     "**/__tests__"
   ],
   "files": [
-    "src/Bases/BaseComponent.ts",
-    "src/Bases/BaseProvider.ts",
-    "src/Bases/CloudflareClient.ts",
-    "src/Bases/index.ts",
-    "src/Certificates/OriginCert.ts",
-    "src/Certificates/index.ts",
     "src/CloudflareZeroTrustAccount.ts",
+    "src/base/BaseComponent.ts",
+    "src/base/BaseProvider.ts",
+    "src/base/CloudflareClient.ts",
+    "src/base/index.ts",
+    "src/certificates/OriginCert.ts",
+    "src/certificates/index.ts",
+    "src/cidr-tools/index.ts",
+    "src/cidr-tools/ip-bigint.ts",
     "src/index.ts",
-    "src/types.ts"
+    "src/types.ts",
+    "src/zeroTrust/ZeroTrustDeviceSettings.ts",
+    "src/zeroTrust/ZeroTrustGatewayCertificateActivation.ts",
+    "src/zeroTrust/ZerotrustAccessWarp.ts",
+    "src/zeroTrust/index.ts"
   ]
 }

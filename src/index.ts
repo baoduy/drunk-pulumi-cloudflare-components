@@ -1,2 +1,2 @@
-export * from './Certificates';
+export * from './certificates';
 export * from './CloudflareZeroTrustAccount'

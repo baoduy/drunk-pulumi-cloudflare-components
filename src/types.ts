@@ -37,5 +37,9 @@ export type ResourceType = {
   id: string;
 };
 
+export type WithVaultInfo = {
+  vaultInfo?: ResourceInputs;
+};
+
 export type ResourceInputs = AsInput<ResourceType>;
 export type ResourceOutputs = AsOutput<ResourceType>;

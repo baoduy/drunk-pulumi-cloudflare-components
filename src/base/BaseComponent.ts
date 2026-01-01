@@ -38,7 +38,6 @@ export abstract class BaseComponent<TArgs extends pulumi.Inputs> extends pulumi.
     //get cloudflare account Id and zone Id from environment variables.
     this.accountId = process.env.CLOUDFLARE_ACCOUNT_ID?pulumi.secret(process.env.CLOUDFLARE_ACCOUNT_ID):undefined;
     this.zoneId = process.env.CLOUDFLARE_ZONE_ID?pulumi.secret(process.env.CLOUDFLARE_ZONE_ID):undefined;
-
   }
 
   /**

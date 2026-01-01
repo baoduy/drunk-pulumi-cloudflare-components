@@ -1,5 +1,5 @@
 import * as pulumi from '@pulumi/pulumi';
-import { BaseOptions, BaseProvider, BaseResource, CfDomainClient, OriginCertType } from '../Bases';
+import {BaseOptions, BaseProvider, BaseResource, CfDomainClient, OriginCertType} from '../base';
 import crypto from 'crypto';
 
 export interface OriginCertInputs {
@@ -8,15 +8,10 @@ export interface OriginCertInputs {
 
 export interface OriginCertOutputs extends OriginCertType {}
 
-class OriginCertProvider implements BaseProvider<OriginCertInputs, OriginCertOutputs> {
-  constructor(private name: string) {}
+class OriginCertProvider extends BaseProvider<OriginCertInputs, OriginCertOutputs> {
+  constructor(private name: string) {super();}
 
-  private getHash() {
-    const hash = crypto.createHash('sha1');
-    return hash.update(`origin-cert-provider:${this.name}`).digest('hex');
-  }
-
-  async create(inputs: OriginCertInputs): Promise<pulumi.dynamic.CreateResult> {
+  public async create(inputs: OriginCertInputs): Promise<pulumi.dynamic.CreateResult> {
     const id = this.getHash();
     const client = new CfDomainClient(inputs.domain);
     const certs = await client.getOriginCerts();
@@ -28,15 +23,13 @@ class OriginCertProvider implements BaseProvider<OriginCertInputs, OriginCertOut
     return { id, outs: cert };
   }
 
-  async diff(
-    id: string,
-    previousOutput: OriginCertOutputs,
-    news: OriginCertInputs,
-  ): Promise<pulumi.dynamic.DiffResult> {
-    return { changes: true };
-  }
   async update(id: string, olds: OriginCertOutputs, news: OriginCertInputs): Promise<pulumi.dynamic.UpdateResult> {
     return await this.create(news);
+  }
+
+  private getHash() {
+    const hash = crypto.createHash('sha1');
+    return hash.update(`origin-cert-provider:${this.name}`).digest('hex');
   }
 }
 
@@ -49,7 +42,7 @@ export class OriginCertResource extends BaseResource<OriginCertInputs, OriginCer
   constructor(name: string, props: BaseOptions<OriginCertInputs>, opts?: pulumi.CustomResourceOptions) {
     super(
       new OriginCertProvider(name),
-      `drunk-pulumi:custom:OriginCertProvider:${name}`,
+      `drunk:cloudflare:OriginCertProvider:${name}`,
       { id: undefined, certificate: undefined, expires_on: undefined, hostnames: [], ...props },
       opts,
     );
