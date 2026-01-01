@@ -32,6 +32,7 @@
     "src/certificates/index.ts",
     "src/cidr-tools/index.ts",
     "src/cidr-tools/ip-bigint.ts",
+    "src/helpers.ts",
     "src/index.ts",
     "src/types.ts",
     "src/zeroTrust/ZeroTrustDeviceSettings.ts",

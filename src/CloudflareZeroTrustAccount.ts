@@ -1,11 +1,20 @@
-import { BaseComponent } from './base';
+import {BaseComponent} from './base';
 import * as pulumi from '@pulumi/pulumi';
 import * as cf from '@pulumi/cloudflare';
-import { AppRegistration, AzRole, createCloudflareAzIdentity, RandomPassword } from '@drunk-pulumi/azure-providers';
+import {
+    AppRegistration,
+    AzRole,
+    createCloudflareAzIdentity,
+    RandomPassword,
+    VaultSecret,
+} from '@drunk-pulumi/azure-providers';
 import * as types from './types';
-import { ZeroTrustDeviceSettingsResource, ZeroTrustGatewayCertificateActivationResource } from './zeroTrust';
+import {ZeroTrustDeviceSettingsResource, ZeroTrustGatewayCertificateActivationResource} from './zeroTrust';
 import * as cidrTools from './cidr-tools';
-import { ZeroTrustAccessWarpResource } from './zeroTrust/ZerotrustAccessWarp';
+import {ZeroTrustAccessWarpResource} from './zeroTrust/ZerotrustAccessWarp';
+import {getTunnelTokenOutput} from "./helpers";
+
+type TunnelArgs = Required<types.WithName> & { configSrc?: 'local' | 'cloudflare' };
 
 export interface CloudflareZeroTrustAccountArgs extends types.WithVaultInfo {
   organization?: Partial<Omit<cf.ZeroTrustOrganizationArgs, 'accountId' | 'zoneId' | 'authDomain' | 'name'>> & {
@@ -21,7 +30,7 @@ export interface CloudflareZeroTrustAccountArgs extends types.WithVaultInfo {
     localExcludeIpaddressSpaces?: string[];
     allowedDevicePlatforms?: ('windows' | 'mac' | 'linux' | 'android' | 'ios' | 'chromeos')[];
   };
-  tunnels?: Array<Required<types.WithName> & { configSrc?: 'local' | 'cloudflare' }>;
+  tunnels?: Array<TunnelArgs>;
 }
 
 type TunnelOutputType = { id: pulumi.Output<string>; vaultSecretName: string };
@@ -443,6 +452,44 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
     );
   }
 
+  private createTunnel({ name, configSrc }: TunnelArgs) {
+    const { vaultInfo } = this.args;
+    const secret = new RandomPassword(
+      `${this.name}-${name}-tunnel-secret`,
+      {
+        length: 100,
+        options: { lower: true, numeric: true, special: false, upper: true },
+        policy: false,
+      },
+      { parent: this },
+    );
+
+    const tunnel = new cf.ZeroTrustTunnelCloudflared(
+      `${this.name}-${name}-tunnel`,
+      {
+        accountId: this.accountId!,
+        name,
+        configSrc: configSrc ?? 'cloudflare',
+        tunnelSecret: secret.value.apply((v) => Buffer.from(v).toString('base64')),
+      },
+      { dependsOn: secret, parent: this, deleteBeforeReplace: true, replaceOnChanges: ['tunnelSecret'] },
+    );
+
+    if (vaultInfo) {
+        const token = getTunnelTokenOutput(this.accountId!, tunnel.id);
+      new VaultSecret(
+        `${this.name}-${name}-token`,
+        {
+          vaultInfo,
+          value: token,
+          contentType: `${name} CloudFlared tunnel token`,
+        },
+        { parent: this, dependsOn: tunnel, deletedWith: tunnel },
+      );
+    }
+
+    return { id: tunnel.id, vaultSecretName: `${this.name}-${name}-token` };
+  }
   private createTunnels() {
     const { tunnels, vaultInfo } = this.args;
     if (!tunnels) return undefined;
@@ -460,29 +507,8 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
     const cfTunnels: Record<string, TunnelOutputType> = {};
 
     for (const t of tunnels) {
-      const secret = new RandomPassword(
-        `${this.name}-${t.name}-tunnel-secret`,
-        {
-          length: 100,
-          options: { lower: true, numeric: true, special: false, upper: true },
-          policy: false,
-          vaultInfo,
-        },
-        { parent: this },
-      );
-
-      const tunnel = new cf.ZeroTrustTunnelCloudflared(
-        `${this.name}-${t.name}-tunnel`,
-        {
-          accountId: this.accountId!,
-          name: t.name,
-          configSrc: t.configSrc ?? 'cloudflare',
-          tunnelSecret: secret.value,
-        },
-        { dependsOn: secret, parent: this },
-      );
-
-      cfTunnels[t.name] = { id: tunnel.id, vaultSecretName: secret.name };
+      const tunnel = this.createTunnel(t);
+      cfTunnels[t.name] = { id: tunnel.id, vaultSecretName: `${this.name}-${t.name}-token` };
     }
 
     return { defaultNetwork, tunnels: cfTunnels };
