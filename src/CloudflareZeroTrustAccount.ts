@@ -7,7 +7,7 @@ import {
     createCloudflareAzIdentity,
     RandomPassword,
     VaultSecret,
-} from '@drunk-pulumi/azure-providers';
+} from '@drunk-pulumi/azure-components';
 import * as types from './types';
 import {ZeroTrustDeviceSettingsResource, ZeroTrustGatewayCertificateActivationResource} from './zeroTrust';
 import * as cidrTools from './cidr-tools';
