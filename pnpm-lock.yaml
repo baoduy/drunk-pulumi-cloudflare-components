@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@drunk-pulumi/azure-providers':
-        specifier: file:///../drunk-pulumi-azure-components/bin
-        version: '@drunk-pulumi/azure-components@file:../drunk-pulumi-azure-components/bin(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)'
+      '@drunk-pulumi/azure-components':
+        specifier: v1.1.1
+        version: 1.1.1(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)
       '@pulumi/cloudflare':
         specifier: ^6.12.0
         version: 6.12.0(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)
@@ -188,8 +188,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@drunk-pulumi/azure-components@file:../drunk-pulumi-azure-components/bin':
-    resolution: {directory: ../drunk-pulumi-azure-components/bin, type: directory}
+  '@drunk-pulumi/azure-components@1.1.1':
+    resolution: {integrity: sha512-WSS2MITSLpEBAgrmYXnoI/RS8TClFGsrgkk0Ii9bcCa/kIvYDoWor+bMb3Hr4+kdkb5Eit/hKA700Ma8+wYA8Q==}
 
   '@drunk-pulumi/azure-providers@1.0.10':
     resolution: {integrity: sha512-4Di2/rQHfXsxAL4boq4wybJS0PGBHIlOUxkOa+cRL6MEabiMQPSz9sZAJIvF/c8gRIRTMWqJh8680kZdWSobNw==}
@@ -2447,7 +2447,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@drunk-pulumi/azure-components@file:../drunk-pulumi-azure-components/bin(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)':
+  '@drunk-pulumi/azure-components@1.1.1(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@azure/keyvault-certificates': 4.10.0
       '@azure/keyvault-keys': 4.10.0
