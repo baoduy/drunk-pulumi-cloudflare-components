@@ -1,0 +1,59 @@
+{
+  "name": "@drunk-pulumi/cloudflare-components",
+  "version": "0.0.1",
+  "description": "The custom components for Pulumi Cloudflare",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "pulumi": {
+    "resource": false,
+    "name": "@drunk-pulumi/cloudflare-components"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baoduy/drunk-pulumi-cloudflare-components.git"
+  },
+  "scripts": {
+    "fastBuild": "cross-env NODE_ENV=production && NODE_OPTIONS=\"--max-old-space-size=4092\" npx tsc",
+    "build": "pnpm run update-tsconfig && pnpm run fastBuild && npm run copy-pkg",
+    "copy-pkg": "ts-node ./.tasks/npm-package.ts && cpy README.md bin/ && cpy PulumiPlugin.yaml bin/",
+    "update-tsconfig": "ts-node ./.tasks/update-tsconfig.ts",
+    "update": "npx npm-check-updates -u && pnpm install",
+    "test": "jest",
+    "docs": "ts-node ./.tasks/generate-docs.ts"
+  },
+  "keywords": [],
+  "author": "Steven Hoang",
+  "license": "MIT",
+  "dependencies": {
+    "@drunk-pulumi/azure-providers": "file:///../drunk-pulumi-azure-components/bin",
+    "@pulumi/cloudflare": "^6.12.0",
+    "@pulumi/pulumi": "^3.214.0",
+    "@pulumi/random": "^4.18.5",
+    "cloudflare": "^5.2.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.21",
+    "@types/netmask": "^2.0.6",
+    "@types/node": "25.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
+    "cpy-cli": "^6.0.0",
+    "cross-env": "^10.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "5.9.3"
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "all",
+    "singleQuote": true,
+    "printWidth": 120,
+    "tabWidth": 2
+  },
+  "lint-staged": {
+    "**/*.{js,ts}": [
+      "eslint --fix"
+    ]
+  }
+}

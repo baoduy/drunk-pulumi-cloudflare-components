@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./bin",
+    "target": "ESNext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "inlineSourceMap": true,
+    "stripInternal": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "strict": true,
+    "preserveValueImports": false,
+    "importsNotUsedAsValues": "remove",
+    "verbatimModuleSyntax": false
+  },
+  "exclude": [
+    "node_modules",
+    "**/__tests__"
+  ],
+  "files": [
+    "src/CloudflareZeroTrustAccount.ts",
+    "src/base/BaseComponent.ts",
+    "src/base/BaseProvider.ts",
+    "src/base/CloudflareClient.ts",
+    "src/base/index.ts",
+    "src/certificates/OriginCert.ts",
+    "src/certificates/index.ts",
+    "src/cidr-tools/index.ts",
+    "src/cidr-tools/ip-bigint.ts",
+    "src/helpers.ts",
+    "src/index.ts",
+    "src/types.ts",
+    "src/zeroTrust/ZeroTrustDeviceSettings.ts",
+    "src/zeroTrust/ZeroTrustGatewayCertificateActivation.ts",
+    "src/zeroTrust/ZerotrustAccessWarp.ts",
+    "src/zeroTrust/index.ts"
+  ]
+}

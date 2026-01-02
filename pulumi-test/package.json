@@ -1,0 +1,16 @@
+{
+    "name": "pulumi-test",
+    "main": "index.ts",
+    "scripts": {
+        "update": "npx npm-check-updates -u && pnpm install",
+        "up": "pulumi up -y"
+    },
+    "devDependencies": {
+        "@types/node": "^24",
+        "typescript": "^5.9.2"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.196.0",
+        "@drunk-pulumi/cloudflare-components": "file://../bin"
+    }
+}
