@@ -19,7 +19,7 @@ export const request = async (path:string, method:'GET'|'POST'|'PUT'|'DELETE', b
         );
     }
 
-    return JSON.parse(await response.text()).result;
+    return (await response.json()).result;
 }
 
 export async function getTunnelToken( tunnelId:string): Promise<string> {
