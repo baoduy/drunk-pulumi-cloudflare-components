@@ -1,5 +1,5 @@
 import * as pulumi from '@pulumi/pulumi';
-import {BaseOptions, BaseProvider, BaseResource, CfDomainClient, OriginCertType} from '../base';
+import {BaseOptions, BaseProvider, BaseResource, CfDomainClient, OriginCertType} from '../../base';
 import crypto from 'crypto';
 
 export interface OriginCertInputs {
