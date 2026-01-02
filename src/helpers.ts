@@ -22,12 +22,12 @@ export const request = async (path:string, method:'GET'|'POST'|'PUT'|'DELETE', b
     return JSON.parse(await response.text()).result;
 }
 
-export async function getTunnelToken(accountId:string, tunnelId:string): Promise<string> {
+export async function getTunnelToken( tunnelId:string): Promise<string> {
     return request(`cfd_tunnel/${tunnelId}/token`, 'GET');
 }
 
-export function getTunnelTokenOutput(accountId:pulumi.Input<string>, tunnelId:pulumi.Input<string>): pulumi.Output<string> {
-    return pulumi.output([accountId,tunnelId]).apply(async ([accountId, tunnelId]) => {
-        return getTunnelToken(accountId, tunnelId);
+export function getTunnelTokenOutput( tunnelId:pulumi.Input<string>): pulumi.Output<string> {
+    return pulumi.output(tunnelId).apply(async ( tunnelId) => {
+        return getTunnelToken(tunnelId);
     });
 }

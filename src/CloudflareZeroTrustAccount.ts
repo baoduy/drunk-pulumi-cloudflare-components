@@ -476,7 +476,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
     );
 
     if (vaultInfo) {
-        const token = getTunnelTokenOutput(this.accountId!, tunnel.id);
+        const token = getTunnelTokenOutput( tunnel.id);
       new VaultSecret(
         `${this.name}-${name}-token`,
         {
