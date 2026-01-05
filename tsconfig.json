@@ -38,7 +38,9 @@
     "src/types.ts",
     "src/zeroTrust/ZeroTrustDeviceSettings.ts",
     "src/zeroTrust/ZeroTrustGatewayCertificateActivation.ts",
+    "src/zeroTrust/ZeroTrustPrivateApplication.ts",
     "src/zeroTrust/ZerotrustAccessWarp.ts",
+    "src/zeroTrust/ZerotrustConnectivitySettings.ts",
     "src/zeroTrust/index.ts"
   ]
 }
