@@ -30,6 +30,7 @@
     "src/base/index.ts",
     "src/cidr-tools/index.ts",
     "src/cidr-tools/ip-bigint.ts",
+    "src/domain/DnsRecords.ts",
     "src/domain/certificates/OriginCert.ts",
     "src/domain/certificates/index.ts",
     "src/domain/index.ts",
