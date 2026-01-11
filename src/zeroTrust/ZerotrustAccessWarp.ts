@@ -1,6 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 import {BaseOptions, BaseProvider, BaseResource,} from '../base';
-import {request} from "../helpers";
+import {accountHelper} from "../helpers";
 
 export interface ZeroTrustAccessWarpInputs {
     accountId: string;
@@ -13,11 +13,11 @@ export interface ZeroTrustAccessWarpOutputs extends ZeroTrustAccessWarpInputs {
 }
 
 const getWrap = async (): Promise<any> => {
-    return request(`access/warp`,'GET');
+    return accountHelper.request(`access/warp`, 'GET');
 };
 
-const updateWrap = async (wrap:any): Promise<any> => {
-    return request(`access/warp`,'PUT',wrap);
+const updateWrap = async (wrap: any): Promise<any> => {
+    return accountHelper.request(`access/warp`, 'PUT', wrap);
 };
 
 class ZeroTrustAccessWarpProvider extends BaseProvider<ZeroTrustAccessWarpInputs, ZeroTrustAccessWarpOutputs> {
@@ -29,14 +29,14 @@ class ZeroTrustAccessWarpProvider extends BaseProvider<ZeroTrustAccessWarpInputs
         const body = await getWrap();
         const newBody = {...body, policies: inputs.policies};
 
-        if(!inputs.allowedIdps||inputs.allowedIdps.length===0){
-            newBody['allowed_idps']= [];
-        }else {
-            newBody['allowed_idps']= inputs.allowedIdps;
-            newBody['auto_redirect_to_identity']= inputs.allowedIdps.length===1?true:inputs.autoRedirectToIdp;
+        if (!inputs.allowedIdps || inputs.allowedIdps.length === 0) {
+            newBody['allowed_idps'] = [];
+        } else {
+            newBody['allowed_idps'] = inputs.allowedIdps;
+            newBody['auto_redirect_to_identity'] = inputs.allowedIdps.length === 1 ? true : inputs.autoRedirectToIdp;
         }
         await updateWrap(newBody);
-        return {id:this.name, outs: inputs};
+        return {id: this.name, outs: inputs};
     }
 }
 
