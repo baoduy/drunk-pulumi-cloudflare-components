@@ -572,7 +572,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
     private createTunnelAnonymousRoutes(anonymousRoutes: PublicHostNameArgs[], tunnel: cf.ZeroTrustTunnelCloudflared) {
         return new ZeroAnonymousApplication(`${this.name}-anonymous-app`, {
             anonymousHosts: anonymousRoutes,
-            tunnelId: tunnel.accountId
+            tunnelId: tunnel.id
         }, {dependsOn: tunnel, parent: this});
     }
 

@@ -1,8 +1,8 @@
 import * as pulumi from '@pulumi/pulumi';
 import {Inputs, Output} from '@pulumi/pulumi';
 import {BaseComponent} from '../base';
-import * as cf from '@pulumi/cloudflare';
 import {DnsRecordsResource} from "../domain";
+import * as cf from "@pulumi/cloudflare";
 
 export type PublicHostNameArgs = {
     fqdn: string,
@@ -43,21 +43,23 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
 
         return new cf.ZeroTrustTunnelCloudflaredConfig(`${this.name}-public-route-${args.fqdn}`, {
             accountId: this.accountId!,
+            tunnelId,
             config: {
                 ingresses: [{
                     hostname: args.fqdn,
                     service: `${args.protocol}://${args.ipAddress}:${args.port}`,
                     path: '/',
                     originRequest: {httpHostHeader: args.fqdn}
-                }, {
-                    "service": "http_status:404"
-                }],
+                },
+                    {
+                        hostname: '',
+                        service: "http_status:404"
+                    }
+                ],
             },
-            tunnelId,
-            source: 'cloudflare'
         }, {
             dependsOn: dns,
-            parent: this
+            parent: this,
         });
     }
 

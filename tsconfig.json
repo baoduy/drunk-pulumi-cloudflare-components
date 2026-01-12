@@ -40,11 +40,11 @@
     "src/index.ts",
     "src/types.ts",
     "src/zeroTrust/ZeroAnonymousApplication.ts",
+    "src/zeroTrust/ZeroTrustAccessWarp.ts",
     "src/zeroTrust/ZeroTrustApplication.ts",
+    "src/zeroTrust/ZeroTrustConnectivitySettings.ts",
     "src/zeroTrust/ZeroTrustDeviceSettings.ts",
     "src/zeroTrust/ZeroTrustGatewayCertificateActivation.ts",
-    "src/zeroTrust/ZerotrustAccessWarp.ts",
-    "src/zeroTrust/ZerotrustConnectivitySettings.ts",
     "src/zeroTrust/index.ts"
   ]
 }
