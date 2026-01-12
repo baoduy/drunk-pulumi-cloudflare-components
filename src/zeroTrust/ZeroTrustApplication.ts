@@ -2,26 +2,26 @@ import * as pulumi from '@pulumi/pulumi';
 import {Inputs, Output} from '@pulumi/pulumi';
 import {BaseComponent} from '../base';
 import * as cf from '@pulumi/cloudflare';
-import {DnsRecordsResource} from "../domain";
-
-type PublicHostNameArgs = {
-    fqdn: string,
-    protocol: 'tcp' | 'udp' | 'http' | 'https',
-    ipAddress: string,
-    port?: number
-};
+import {PublicHostNameArgs, ZeroAnonymousApplication} from "./ZeroAnonymousApplication";
 
 type PrivateHostNameArgs = {
-    fqdn: string, port: number,
-
+    fqdn: string,
+    port: number,
 };
-type PrivateIpAddressArgs = { cidr: string, port: number, protocol?: 'tcp' | 'udp' };
+type PrivateIpAddressArgs = {
+    cidr: string,
+    port: number,
+    protocol?: 'tcp' | 'udp'
+};
 
 export interface ZeroTrustApplicationArgs {
     name: string;
     info?: Partial<Omit<cf.ZeroTrustAccessApplicationArgs, 'accountId' | 'name' | 'destinations' | 'policies' | 'saasApp' | 'scimConfig' | 'zoneId' | 'type'>>,
+    /** Public Apps that allow to access from internet but requires Cloudflare Authentication.*/
     publicHostNames?: Array<PublicHostNameArgs>;
+    /** Private App requires Cloudflare Tunnel to access and require Cloudflare Authentication with Company device.*/
     privateHostNames?: Array<PrivateHostNameArgs>;
+    /** Private App requires Cloudflare Tunnel to access and require Cloudflare Authentication with Company device.*/
     privateIpAddresses?: Array<PrivateIpAddressArgs>;
     tunnelId: pulumi.Input<string>;
     virtualNetworkId?: pulumi.Input<string>;
@@ -32,51 +32,33 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
     public readonly appId: pulumi.Output<string>;
 
     constructor(name: string, args: ZeroTrustApplicationArgs, opts?: pulumi.ComponentResourceOptions) {
-        super('PublicApplications', name, args, opts);
+        super('ZeroTrustApplication', name, args, opts);
 
         const app = this.createApp();
         this.createPublicRoutes(app);
         this.createPrivateRoutes(app);
+        this.createPrivateHosts(app);
+
         this.appId = app.id;
+        this.registerOutputs();
     }
 
     public getOutputs(): Inputs | Output<Inputs> {
         return {appId: this.appId};
     }
 
-    public createPublicRoutes(app: cf.ZeroTrustAccessApplication) {
+    private createPublicRoutes(app: cf.ZeroTrustAccessApplication) {
         const {publicHostNames, tunnelId} = this.args;
-        return publicHostNames?.map(h => {
-            const dns = new DnsRecordsResource(`${this.name}-dns-${h.fqdn}`, {
-                records: [{
-                    name: h.fqdn.split(".")[0],
-                    type: 'CNAME',
-                    content: pulumi.interpolate`${tunnelId}.cfargotunnel.com`,
-                    proxied: true,
-                    ttl: 1000
-                }],
-                zoneId: this.zoneId!,
-            }, {dependsOn: app, parent: this,});
+        if (!publicHostNames || publicHostNames.length === 0) return undefined;
 
-            return new cf.ZeroTrustTunnelCloudflaredConfig(`${this.name}-public-route-${h.fqdn}`, {
-                accountId: this.accountId!,
-                config: {
-                    ingresses: [{
-                        hostname: h.fqdn,
-                        service: `${h.protocol}://${h.ipAddress}:${h.port}`,
-                        path: '/',
-                        originRequest: {httpHostHeader: h.fqdn}
-                    }, {
-                        "service": "http_status:404"
-                    }],
-                },
-                tunnelId,
-                source: 'cloudflare'
+        return new ZeroAnonymousApplication(`${this.name}-public-routes`,
+            {
+                anonymousHosts: publicHostNames,
+                tunnelId
             }, {
-                dependsOn: [app, dns],
+                dependsOn: app,
                 parent: this
-            });
-        });
+            })
     }
 
     private createApp() {
@@ -94,6 +76,10 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
             port: p.port.toString(),
             l4Protocol: p.protocol ?? 'tcp'
         })) || [];
+
+        if (publics.length === 0 && privates.length === 0 && privateIps.length === 0) {
+            throw new Error('At least one publicHostNames, privateHostNames, or privateIpAddresses must be provided.');
+        }
 
         return new cf.ZeroTrustAccessApplication(this.name, {
             accountId: this.accountId,

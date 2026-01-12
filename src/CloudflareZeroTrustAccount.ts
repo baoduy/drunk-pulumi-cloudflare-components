@@ -10,16 +10,17 @@ import {
 } from '@drunk-pulumi/azure-components';
 import * as types from './types';
 import {
+    PublicHostNameArgs,
+    ZeroAnonymousApplication,
+    ZeroTrustAccessWarpResource,
     ZeroTrustApplication,
     ZeroTrustApplicationArgs,
+    ZeroTrustConnectivitySettingsResource,
     ZeroTrustDeviceSettingsResource,
-    ZeroTrustGatewayCertificateActivationResource,
+    ZeroTrustGatewayCertificateActivationResource
 } from './zeroTrust';
 import * as cidrTools from './cidr-tools';
-import {ZeroTrustAccessWarpResource} from './zeroTrust/ZerotrustAccessWarp';
 import {accountHelper} from './helpers';
-
-import {ZeroTrustConnectivitySettingsResource} from './zeroTrust/ZerotrustConnectivitySettings';
 
 type TunnelAppArgs = Omit<ZeroTrustApplicationArgs, 'tunnelId' | 'virtualNetworkId' | 'policies'> & {
     policies?: {
@@ -32,6 +33,7 @@ type TunnelAppArgs = Omit<ZeroTrustApplicationArgs, 'tunnelId' | 'virtualNetwork
 type TunnelArgs = Required<types.WithName> & {
     configSrc?: 'local' | 'cloudflare';
     applications?: TunnelAppArgs[];
+    anonymousRoutes?: PublicHostNameArgs[];
 };
 
 export interface CloudflareZeroTrustAccountArgs extends types.WithVaultInfo {
@@ -94,7 +96,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
             this.deviceEnrollmentPolicy = deviceEnrollmentPolicy;
         }
 
-        if (this.args.tunnels) {
+        if (args.tunnels) {
             const {defaultNetwork, tunnels} = this.createTunnels()!;
             this.defaultTunnelNetwork = defaultNetwork;
             this.tunnels = tunnels;
@@ -519,13 +521,13 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         );
     }
 
-    private createPrivateApp({
-                                 name,
-                                 policies,
-                                 defaultVnet,
-                                 tunnel,
-                                 ...others
-                             }: TunnelAppArgs & {
+    private createTunnelApp({
+                                name,
+                                policies,
+                                defaultVnet,
+                                tunnel,
+                                ...others
+                            }: TunnelAppArgs & {
         defaultVnet: cf.ZeroTrustTunnelCloudflaredVirtualNetwork;
         tunnel: cf.ZeroTrustTunnelCloudflared;
     }) {
@@ -533,7 +535,6 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
 
         if (policies?.requiredDevicePosture && this.devicePosturePolicy) policyIds.push(this.devicePosturePolicy.id);
         if (policies?.requiredSso && this.ssoPolicy) policyIds.push(this.ssoPolicy.id);
-
         if (policies?.groupIds && policies.groupIds.length > 0 && this.identityProvider) {
             const appPolicy = new cf.ZeroTrustAccessPolicy(
                 `${this.name}-${name.replace(/\s+/g, '').toLowerCase()}-group-policy`,
@@ -568,8 +569,16 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         );
     }
 
+    private createTunnelAnonymousRoutes(anonymousRoutes: PublicHostNameArgs[], tunnel: cf.ZeroTrustTunnelCloudflared) {
+        return new ZeroAnonymousApplication(`${this.name}-anonymous-app`, {
+            anonymousHosts: anonymousRoutes,
+            tunnelId: tunnel.accountId
+        }, {dependsOn: tunnel, parent: this});
+    }
+
+
     private createTunnel(
-        {name, configSrc, applications}: TunnelArgs,
+        {name, configSrc, applications, anonymousRoutes}: TunnelArgs,
         defaultVnet: cf.ZeroTrustTunnelCloudflaredVirtualNetwork,
     ) {
         const {vaultInfo} = this.args;
@@ -595,8 +604,11 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         );
 
         //private routes
-        if (applications) {
-            applications.forEach((app) => this.createPrivateApp({...app, defaultVnet, tunnel}));
+        if (applications && applications.length > 0) {
+            applications.forEach((app) => this.createTunnelApp({...app, defaultVnet, tunnel}));
+        }
+        if (anonymousRoutes && anonymousRoutes.length > 0) {
+            this.createTunnelAnonymousRoutes(anonymousRoutes, tunnel);
         }
 
         if (vaultInfo) {
