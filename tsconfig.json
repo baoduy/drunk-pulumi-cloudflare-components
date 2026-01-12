@@ -38,6 +38,8 @@
     "src/helpers/domainHelper.ts",
     "src/helpers/index.ts",
     "src/index.ts",
+    "src/services/TurnstileComponent.ts",
+    "src/services/index.ts",
     "src/types.ts",
     "src/zeroTrust/ZeroAnonymousApplication.ts",
     "src/zeroTrust/ZeroTrustAccessWarp.ts",
