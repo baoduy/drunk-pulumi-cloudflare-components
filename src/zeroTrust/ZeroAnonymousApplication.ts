@@ -4,11 +4,15 @@ import {BaseComponent} from '../base';
 import {DnsRecordsResource} from "../domain";
 import * as cf from "@pulumi/cloudflare";
 
+type Protocol = 'tcp' | 'udp' | 'http' | 'https';
 export type PublicHostNameArgs = {
     fqdn: string,
-    protocol: 'tcp' | 'udp' | 'http' | 'https',
+    protocol: Protocol,
     ipAddress: string,
-    port?: number
+    path?: string,
+    port?: number,
+    passThroughHostHeader?: boolean,
+    ignoreSslValidation?: boolean,
 };
 
 export interface ZeroAnonymousApplicationArgs {
@@ -26,6 +30,21 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
 
     public getOutputs(): Inputs | Output<Inputs> {
         return {};
+    }
+
+    private getDefaultPorts(protocol: Protocol): number {
+        switch (protocol) {
+            case 'http':
+                return 80;
+            case 'https':
+                return 443;
+            case 'tcp':
+                return 22;
+            case 'udp':
+                return 53;
+            default:
+                return 80;
+        }
     }
 
     private createPublicRoute(args: PublicHostNameArgs) {
@@ -47,12 +66,14 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
             config: {
                 ingresses: [{
                     hostname: args.fqdn,
-                    service: `${args.protocol}://${args.ipAddress}:${args.port}`,
-                    path: '/',
-                    originRequest: {httpHostHeader: args.fqdn}
+                    service: `${args.protocol}://${args.ipAddress.split("/")[0]}:${args.port ?? this.getDefaultPorts(args.protocol)}`,
+                    path: args.path,
+                    originRequest: {
+                        originServerName: args?.passThroughHostHeader ? args.fqdn : undefined,
+                        noTlsVerify: args?.ignoreSslValidation ?? false,
+                    },
                 },
                     {
-                        hostname: '',
                         service: "http_status:404"
                     }
                 ],
@@ -64,7 +85,41 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
     }
 
     private createAnonymousRoutes() {
-        const {anonymousHosts} = this.args;
-        return anonymousHosts?.map(h => this.createPublicRoute(h));
+        const {anonymousHosts, tunnelId} = this.args;
+        if (!anonymousHosts || anonymousHosts.length === 0) return undefined;
+
+        //create DNS
+        const dsn = anonymousHosts.map(h => new DnsRecordsResource(`${this.name}-dns-${h.fqdn}`, {
+            records: [{
+                name: h.fqdn.split(".")[0],
+                type: 'CNAME',
+                content: pulumi.interpolate`${tunnelId}.cfargotunnel.com`,
+                proxied: true,
+                ttl: 1000
+            }],
+            zoneId: this.zoneId!,
+        }, {...this.opts, parent: this,}));
+
+        return new cf.ZeroTrustTunnelCloudflaredConfig(`${this.name}-public-routes`, {
+            accountId: this.accountId!,
+            tunnelId,
+            config: {
+                ingresses: [...anonymousHosts.map(h => ({
+                    hostname: h.fqdn,
+                    service: `${h.protocol}://${h.ipAddress.split("/")[0]}:${h.port ?? this.getDefaultPorts(h.protocol)}`,
+                    path: h.path,
+                    originRequest: {
+                        originServerName: h?.passThroughHostHeader ? h.fqdn : undefined,
+                        noTlsVerify: h?.ignoreSslValidation ?? false,
+                    }
+                })), {
+                    service: "http_status:404"
+                }
+                ],
+            },
+        }, {
+            dependsOn: dsn,
+            parent: this,
+        });
     }
 }
