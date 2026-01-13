@@ -65,21 +65,14 @@ const deleteDnsRecord = async (zoneId: string, recordId: string): Promise<void> 
     }
 };
 
-const normalizeName = (name: string): string => {
-    return name.toLowerCase().replace(/\.$/, ''); // Remove trailing dot if present
-};
-
-const findExistingRecord = (records: any[], record: DnsRecordInput): any => {
+const findExistingRecord = (records: Array<DnsRecordInput & { id: string }>, record: DnsRecordInput): any => {
     return records.find((r) => {
         // Normalize both names and extract subdomain (first part before the domain)
-        const existingNameFull = normalizeName(r.name);
-        const inputNameFull = normalizeName(record.name);
+        const splits = r.name.toLowerCase().split('.');
+        const existingName = splits.length > 2 ? splits[0] : '@';
+        const inputName = record.name.toLowerCase();
 
-        // Extract subdomain part: split by '.' and take the first section
-        const existingSubdomain = existingNameFull.split('.')[0];
-        const inputSubdomain = inputNameFull.split('.')[0];
-
-        return existingSubdomain === inputSubdomain && r.type.toUpperCase() === record.type.toUpperCase();
+        return existingName === inputName && r.type.toUpperCase() === record.type.toUpperCase();
     });
 };
 
@@ -87,8 +80,6 @@ const performUpsert = async (zoneId: string, record: DnsRecordInput, recordId?: 
     try {
         return await upsertDnsRecord(zoneId, record, recordId);
     } catch (error: any) {
-        //console.log(`[performUpsert] Error caught for ${record.name} (${record.type}): ${error.message}`);
-
         // If we get "identical record already exists" error, try to find and update it
         if (error.message?.includes('identical record already exists')) {
             const allRecords = await listDnsRecords(zoneId);
@@ -98,7 +89,7 @@ const performUpsert = async (zoneId: string, record: DnsRecordInput, recordId?: 
                 return await upsertDnsRecord(zoneId, record, existingRecord.id);
             }
         }
-        throw error;
+        console.warn(error);
     }
 };
 
@@ -109,7 +100,6 @@ class DnsRecordsProvider extends BaseProvider<DnsRecordsInputs, DnsRecordsOutput
 
     public async create(inputs: DnsRecordsInputs): Promise<pulumi.dynamic.CreateResult> {
         const existingRecords = await listDnsRecords(inputs.zoneId);
-        //console.log(`[DnsRecordsProvider:create] existingRecords for zone ${inputs.zoneId}:`, existingRecords);
 
         const recordIds: string[] = [];
 
