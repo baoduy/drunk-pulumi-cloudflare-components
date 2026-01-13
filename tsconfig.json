@@ -24,6 +24,7 @@
   ],
   "files": [
     "src/CloudflareZeroTrustAccount.ts",
+    "src/CloudflareZone.ts",
     "src/base/BaseComponent.ts",
     "src/base/BaseProvider.ts",
     "src/base/index.ts",
@@ -38,6 +39,7 @@
     "src/helpers/domainHelper.ts",
     "src/helpers/index.ts",
     "src/index.ts",
+    "src/services/FirewallRuleset.ts",
     "src/services/TurnstileComponent.ts",
     "src/services/index.ts",
     "src/types.ts",

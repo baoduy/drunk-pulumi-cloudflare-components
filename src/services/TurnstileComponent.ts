@@ -3,7 +3,7 @@ import {BaseOptions, BaseProvider, BaseResource} from '../base';
 import Cloudflare from 'cloudflare';
 import * as process from "node:process";
 
-export interface TurnstileInput {
+export interface TurnstileInputs {
     name: string;
     accountId?: string;
     config: Omit<Cloudflare.Turnstile.WidgetCreateParams, 'account_id' | 'name'>
@@ -15,12 +15,12 @@ export interface TurnstileOutputs {
     secret: string;
 }
 
-class TurnstileProvider extends BaseProvider<TurnstileInput, TurnstileOutputs> {
+class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> {
     constructor(private name: string) {
         super();
     }
 
-    public async create(inputs: TurnstileInput): Promise<pulumi.dynamic.CreateResult> {
+    public async create(inputs: TurnstileInputs): Promise<pulumi.dynamic.CreateResult> {
         const client = new Cloudflare({
             apiToken: process.env['CLOUDFLARE_API_TOKEN'],
         });
@@ -31,24 +31,24 @@ class TurnstileProvider extends BaseProvider<TurnstileInput, TurnstileOutputs> {
         return {
             id: rs.name,
             outs: {
-                account_id,
+                accountId: account_id,
                 siteKey: rs.sitekey,
                 secret: rs.secret,
             },
         };
     }
 
-    public async update(id: string, olds: TurnstileOutputs, news: TurnstileInput): Promise<pulumi.dynamic.UpdateResult> {
+    public async update(id: string, olds: TurnstileOutputs, news: TurnstileInputs): Promise<pulumi.dynamic.UpdateResult> {
         const client = new Cloudflare({
             apiToken: process.env['CLOUDFLARE_API_TOKEN'],
         });
 
-        const account_id = olds.accountId;
+        const account_id = news.accountId ?? process.env.CLOUDFLARE_ACCOUNT_ID!;
         const rs = await client.turnstile.widgets.update(olds.siteKey, {...news.config, account_id, name: news.name});
 
         return {
             outs: {
-                account_id,
+                accountId: account_id,
                 siteKey: rs.sitekey,
                 secret: rs.secret,
             },
@@ -63,16 +63,19 @@ class TurnstileProvider extends BaseProvider<TurnstileInput, TurnstileOutputs> {
     }
 }
 
-export class TurnstileResource extends BaseResource<TurnstileInput, TurnstileOutputs> {
+export class TurnstileResource extends BaseResource<TurnstileInputs, TurnstileOutputs> {
     declare readonly name: string;
+    declare readonly accountId: pulumi.Output<string>;
     declare readonly siteKey: pulumi.Output<string>;
     declare readonly secret: pulumi.Output<string>;
 
-    constructor(name: string, props: BaseOptions<TurnstileInput>, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, props: BaseOptions<TurnstileInputs>, opts?: pulumi.CustomResourceOptions) {
         const innerOpts = pulumi.mergeOptions(opts, {
             //This is important to tell pulumi to encrypt these outputs in the state.
             // The encrypting and decrypting will be handled bt pulumi automatically
             additionalSecretOutputs: ['siteKey', 'secret'],
+            deleteBeforeReplace: true,
+            replaceOnChanges: ['accountId']
         });
         super(new TurnstileProvider(name), `drunk:cloudflare:Turnstile:${name}`, {
             siteKey: undefined,
