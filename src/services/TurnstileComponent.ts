@@ -1,7 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
-import {BaseOptions, BaseProvider, BaseResource} from '../base';
+import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
 import Cloudflare from 'cloudflare';
-import * as process from "node:process";
 
 export interface TurnstileInputs {
     name: string;
@@ -21,11 +20,9 @@ class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> 
     }
 
     public async create(inputs: TurnstileInputs): Promise<pulumi.dynamic.CreateResult> {
-        const client = new Cloudflare({
-            apiToken: process.env['CLOUDFLARE_API_TOKEN'],
-        });
+        const client = commonHelpers.getCloudflareClient();
+        const account_id = inputs.accountId ?? commonHelpers.cloudflareAccountId;
 
-        const account_id = inputs.accountId ?? process.env.CLOUDFLARE_ACCOUNT_ID!;
         const rs = await client.turnstile.widgets.create({...inputs.config, account_id, name: inputs.name});
 
         return {
@@ -39,11 +36,9 @@ class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> 
     }
 
     public async update(id: string, olds: TurnstileOutputs, news: TurnstileInputs): Promise<pulumi.dynamic.UpdateResult> {
-        const client = new Cloudflare({
-            apiToken: process.env['CLOUDFLARE_API_TOKEN'],
-        });
+        const client = commonHelpers.getCloudflareClient();
+        const account_id = news.accountId ?? commonHelpers.cloudflareAccountId;
 
-        const account_id = news.accountId ?? process.env.CLOUDFLARE_ACCOUNT_ID!;
         const rs = await client.turnstile.widgets.update(olds.siteKey, {...news.config, account_id, name: news.name});
 
         return {
@@ -56,9 +51,7 @@ class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> 
     }
 
     public async delete(id: string, props: TurnstileOutputs): Promise<void> {
-        const client = new Cloudflare({
-            apiToken: process.env['CLOUDFLARE_API_TOKEN'],
-        });
+        const client = commonHelpers.getCloudflareClient();
         await client.turnstile.widgets.delete(props.siteKey, {account_id: props.accountId}).catch(err => console.error(err));
     }
 }

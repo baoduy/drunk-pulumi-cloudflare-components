@@ -79,8 +79,7 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
                     }
                 })), {
                     service: "http_status:404"
-                }
-                ],
+                }],
             },
         }, {
             dependsOn: dsn,
