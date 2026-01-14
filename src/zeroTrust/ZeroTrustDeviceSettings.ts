@@ -1,6 +1,5 @@
 import * as pulumi from '@pulumi/pulumi';
-import {BaseOptions, BaseProvider, BaseResource,} from '../base';
-import {Cloudflare} from "cloudflare";
+import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
 
 export interface ZeroTrustDeviceSettingsInputs {
     accountId: string;
@@ -35,15 +34,16 @@ class ZeroTrustDeviceSettingsProvider extends BaseProvider<ZeroTrustDeviceSettin
     }
 
     public async create(inputs: ZeroTrustDeviceSettingsInputs): Promise<pulumi.dynamic.CreateResult> {
-        const cf = new Cloudflare({ apiToken: process.env.CLOUDFLARE_API_TOKEN, });
-        await cf.zeroTrust.devices.settings.update({account_id: inputs.accountId,
+        const cf = commonHelpers.getCloudflareClient();
+        await cf.zeroTrust.devices.settings.update({
+            account_id: inputs.accountId,
             disable_for_time: inputs.disableForTime,
             gateway_proxy_enabled: inputs.gatewayProxyEnabled,
             gateway_udp_proxy_enabled: inputs.gatewayUdpProxyEnabled,
             root_certificate_installation_enabled: inputs.rootCertificateInstallationEnabled,
             use_zt_virtual_ip: inputs.useZtVirtualIp,
         });
-        return { id: this.name, outs: inputs };
+        return {id: this.name, outs: inputs};
     }
 }
 

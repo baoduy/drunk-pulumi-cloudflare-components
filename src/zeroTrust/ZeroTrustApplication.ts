@@ -112,5 +112,6 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
     }
 
     private createPrivateHosts(app: cf.ZeroTrustAccessApplication) {
+
     }
 }

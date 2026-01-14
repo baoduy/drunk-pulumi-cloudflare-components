@@ -17,10 +17,11 @@ import {
     ZeroTrustApplicationArgs,
     ZeroTrustConnectivitySettingsResource,
     ZeroTrustDeviceSettingsResource,
-    ZeroTrustGatewayCertificateActivationResource
+    ZeroTrustGatewayCertificateActivationResource,
+    ZeroTrustPoliciesImportResource,
 } from './zeroTrust';
 import * as cidrTools from './cidr-tools';
-import {accountHelper} from './helpers';
+import {accountHelper, libs} from './helpers';
 
 type TunnelAppArgs = Omit<ZeroTrustApplicationArgs, 'tunnelId' | 'virtualNetworkId' | 'policies'> & {
     policies?: {
@@ -51,6 +52,9 @@ export interface CloudflareZeroTrustAccountArgs extends types.WithVaultInfo {
         allowedDevicePlatforms?: ('windows' | 'mac' | 'linux' | 'android' | 'ios' | 'chromeos')[];
     };
     tunnels?: Array<TunnelArgs>;
+    imports?: {
+        gatewayRulesDirectory?: string;
+    };
 }
 
 type TunnelOutputType = { id: pulumi.Output<string>; vaultSecretName: string };
@@ -101,6 +105,8 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
             this.defaultTunnelNetwork = defaultNetwork;
             this.tunnels = tunnels;
         }
+
+        this.createImports();
         this.registerOutputs();
     }
 
@@ -145,7 +151,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 ...organization,
                 authDomain: `${organization.name}.cloudflareaccess.com`,
             },
-            {...this.opts, parent: this,},
+            {...this.opts, parent: this},
         );
     }
 
@@ -183,7 +189,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                     seatDeprovision: true,
                 },
             },
-            {dependsOn: identity, parent: this,},
+            {dependsOn: identity, parent: this},
         );
 
         const ssoPolicy = new cf.ZeroTrustAccessPolicy(
@@ -210,7 +216,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 activate: true,
                 validityPeriodDays: 1825,
             },
-            {parent: this,},
+            {parent: this},
         );
 
         new ZeroTrustGatewayCertificateActivationResource(
@@ -219,7 +225,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 accountId: this.accountId!,
                 certificateId: cert.id,
             },
-            {parent: this, dependsOn: cert,},
+            {parent: this, dependsOn: cert},
         );
 
         return cert;
@@ -250,7 +256,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                     ...gatewaySettings,
                 },
             },
-            {dependsOn: cert, parent: this,},
+            {dependsOn: cert, parent: this},
         );
 
         new ZeroTrustConnectivitySettingsResource(
@@ -273,7 +279,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                     l4: {logAll: true, logBlocks: false},
                 },
             },
-            {dependsOn: settings, parent: this,},
+            {dependsOn: settings, parent: this},
         );
     }
 
@@ -290,7 +296,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 useZtVirtualIp: false,
                 ...deviceSettings,
             },
-            {parent: this,},
+            {parent: this},
         );
     }
 
@@ -379,7 +385,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 ],
                 ...deviceProfiles,
             },
-            {parent: this,},
+            {parent: this},
         );
     }
 
@@ -406,13 +412,13 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                     },
                 ],
             },
-            {dependsOn: [identityProvider, groupRole], parent: this,},
+            {dependsOn: [identityProvider, groupRole], parent: this},
         );
 
         new ZeroTrustAccessWarpResource(
             `${this.name}-access-warp`,
             {accountId: this.accountId!, allowedIdps: [identityProvider.id], policies: [deviceEnrollmentPolicy.id]},
-            {dependsOn: [deviceEnrollmentPolicy, identityProvider], parent: this,},
+            {dependsOn: [deviceEnrollmentPolicy, identityProvider], parent: this},
         );
 
         return {groupRole, deviceEnrollmentPolicy};
@@ -451,7 +457,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 expiration: '24h',
                 type: 'gateway',
             },
-            {parent: this,},
+            {parent: this},
         );
 
         const warp = new cf.ZeroTrustDevicePostureRule(
@@ -483,7 +489,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                     matches: devicePlatforms.map((f) => ({platform: f})),
                     schedule: '60m',
                 },
-                {parent: this,},
+                {parent: this},
             )
             : undefined;
 
@@ -504,7 +510,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 includes: [{loginMethod: {id: identityProvider.id}}],
                 requires: Object.values(devicesPostureRules).map((d) => ({devicePosture: {integrationUid: d.id}})),
             },
-            {dependsOn: Object.values(devicesPostureRules), parent: this,},
+            {dependsOn: Object.values(devicesPostureRules), parent: this},
         );
     }
 
@@ -551,7 +557,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                         },
                     })),
                 },
-                {dependsOn: this.identityProvider, parent: this,},
+                {dependsOn: this.identityProvider, parent: this},
             );
             policyIds.push(appPolicy.id);
         }
@@ -570,12 +576,15 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
     }
 
     private createTunnelAnonymousRoutes(anonymousRoutes: PublicHostNameArgs[], tunnel: cf.ZeroTrustTunnelCloudflared) {
-        return new ZeroAnonymousApplication(`${this.name}-anonymous-app`, {
-            anonymousHosts: anonymousRoutes,
-            tunnelId: tunnel.id
-        }, {dependsOn: tunnel, parent: this});
+        return new ZeroAnonymousApplication(
+            `${this.name}-anonymous-app`,
+            {
+                anonymousHosts: anonymousRoutes,
+                tunnelId: tunnel.id,
+            },
+            {dependsOn: tunnel, parent: this},
+        );
     }
-
 
     private createTunnel(
         {name, configSrc, applications, anonymousRoutes}: TunnelArgs,
@@ -640,5 +649,19 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         }
 
         return {defaultNetwork, tunnels: cfTunnels};
+    }
+
+    private createImports() {
+        const {imports} = this.args;
+        if (imports?.gatewayRulesDirectory) {
+            new ZeroTrustPoliciesImportResource(
+                `${this.name}-policies-import`,
+                {
+                    accountId: this.accountId!,
+                    gatewayRules: libs.readConfigs(imports.gatewayRulesDirectory),
+                },
+                {...this.opts, parent: this},
+            );
+        }
     }
 }
