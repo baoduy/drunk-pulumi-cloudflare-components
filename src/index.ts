@@ -1,3 +1,5 @@
 export * as domain from './domain';
 export * as zeroTrust from './zeroTrust';
-export * from './CloudflareZeroTrustAccount'
+export * from './services';
+export * from './CloudflareZeroTrustAccount';
+export * from './CloudflareZone';
