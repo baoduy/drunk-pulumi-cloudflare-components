@@ -1,5 +1,4 @@
 import * as pulumi from '@pulumi/pulumi';
-import {isEqual} from 'lodash';
 
 export type DeepInput<T> = T extends object
     ? { [K in keyof T]: DeepInput<T[K]> | pulumi.Input<T[K]> }
@@ -23,9 +22,7 @@ export abstract class BaseProvider<TInputs, TOutputs> implements pulumi.dynamic.
 
     public abstract create(inputs: TInputs): Promise<pulumi.dynamic.CreateResult<TOutputs>>;
 
-    public async diff(id: string, previousOutput: TOutputs, news: TInputs): Promise<pulumi.dynamic.DiffResult> {
-        return {changes: !isEqual(previousOutput, news)};
-    }
+    public diff?(id: string, previousOutput: TOutputs, news: TInputs): Promise<pulumi.dynamic.DiffResult>;
 }
 
 export abstract class BaseResource<TInputs, TOutputs> extends pulumi.dynamic.Resource {
