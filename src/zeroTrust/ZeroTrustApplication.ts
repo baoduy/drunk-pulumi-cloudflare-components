@@ -112,6 +112,14 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
     }
 
     private createPrivateHosts(app: cf.ZeroTrustAccessApplication) {
-
+        const {privateHostNames, tunnelId} = this.args;
+        return privateHostNames?.map(h => new cf.ZeroTrustNetworkHostnameRoute(`${this.name}-private-host-${h.fqdn}`, {
+            accountId: this.accountId!,
+            hostname: h.fqdn,
+            tunnelId
+        }, {
+            dependsOn: app,
+            parent: this
+        },));
     }
 }

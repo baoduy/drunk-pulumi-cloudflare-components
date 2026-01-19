@@ -50,6 +50,7 @@ export interface CloudflareZeroTrustAccountArgs extends types.WithVaultInfo {
     > & {
         localIncludesIpAddressSpaces?: string[];
         allowedDevicePlatforms?: ('windows' | 'mac' | 'linux' | 'android' | 'ios' | 'chromeos')[];
+        enablePrivateHostNameRoute?: boolean;
     };
     tunnels?: Array<TunnelArgs>;
     imports?: {
@@ -323,6 +324,9 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         const {deviceProfiles} = this.args;
         const excludeLocalIps = this.calculateExcludeIpaddressSpaces();
 
+        if (!deviceProfiles?.enablePrivateHostNameRoute)
+            excludeLocalIps.push('100.64.0.0/10');
+
         return new cf.ZeroTrustDeviceDefaultProfile(
             `${this.name}-devices-default-profile`,
             {
@@ -340,9 +344,6 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 serviceModeV2: {mode: 'warp'},
                 excludes: [
                     ...excludeLocalIps.map((address) => ({address: address, description: 'Local Ip Addresses'})),
-                    {
-                        address: '100.64.0.0/10',
-                    },
                     {
                         address: '169.254.0.0/16',
                         description: 'DHCP Unspecified',
