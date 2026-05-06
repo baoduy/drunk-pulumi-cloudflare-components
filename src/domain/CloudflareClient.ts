@@ -41,7 +41,7 @@ export class CfDomainClient {
         const list = this._client.ssl.certificatePacks.list({zone_id: zone.id});
         const rs = new Array<EdgeCertType>();
         for await (const item of list) {
-            rs.push(item as EdgeCertType);
+            rs.push(item as unknown as EdgeCertType);
         }
         return rs;
     }
