@@ -34,6 +34,7 @@ export type WithName = {
 
 export type ResourceType = {
   resourceName: string;
+  resourceGroupName: string;
   id: string;
 };
 

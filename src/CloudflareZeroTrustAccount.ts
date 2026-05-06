@@ -409,7 +409,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
                 includes: [{loginMethod: {id: identityProvider.id}}],
                 requires: [
                     {
-                        azureAd: {identityProviderId: identityProvider.id, id: groupRole.objectId},
+                        azureAd: {identityProviderId: identityProvider.id, id: groupRole.getOutputs().objectId},
                     },
                 ],
             },
