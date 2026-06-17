@@ -1,6 +1,6 @@
 import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from "../base";
 import * as pulumi from "@pulumi/pulumi";
-import Cloudflare from "cloudflare";
+import type Cloudflare from "cloudflare";
 
 export interface FirewallRulesetInputs extends Pick<Cloudflare.Rulesets.RulesetCreateParams, 'rules' | 'phase'> {
     zoneId?: string;
@@ -30,7 +30,7 @@ class FirewallRulesetProvider extends BaseProvider<FirewallRulesetInputs, Firewa
     }
 
     public async create(inputs: FirewallRulesetInputs): Promise<pulumi.dynamic.CreateResult<FirewallRulesetOutputs>> {
-        const client = commonHelpers.getCloudflareClient();
+        const client = await commonHelpers.getCloudflareClient();
         const zoneId = inputs.zoneId || commonHelpers.cloudflareZoneId;
 
         const set = await getOrCreateRuleset(client, inputs);

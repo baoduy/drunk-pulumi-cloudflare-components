@@ -1,6 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
-import Cloudflare from 'cloudflare';
+import type Cloudflare from 'cloudflare';
 
 export interface TurnstileInputs {
     name: string;
@@ -20,7 +20,7 @@ class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> 
     }
 
     public async create(inputs: TurnstileInputs): Promise<pulumi.dynamic.CreateResult> {
-        const client = commonHelpers.getCloudflareClient();
+        const client = await commonHelpers.getCloudflareClient();
         const account_id = inputs.accountId ?? commonHelpers.cloudflareAccountId;
 
         const rs = await client.turnstile.widgets.create({...inputs.config, account_id, name: inputs.name});
@@ -36,7 +36,7 @@ class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> 
     }
 
     public async update(id: string, olds: TurnstileOutputs, news: TurnstileInputs): Promise<pulumi.dynamic.UpdateResult> {
-        const client = commonHelpers.getCloudflareClient();
+        const client = await commonHelpers.getCloudflareClient();
         const account_id = news.accountId ?? commonHelpers.cloudflareAccountId;
 
         const rs = await client.turnstile.widgets.update(olds.siteKey, {...news.config, account_id, name: news.name});
@@ -51,7 +51,7 @@ class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> 
     }
 
     public async delete(id: string, props: TurnstileOutputs): Promise<void> {
-        const client = commonHelpers.getCloudflareClient();
+        const client = await commonHelpers.getCloudflareClient();
         await client.turnstile.widgets.delete(props.siteKey, {account_id: props.accountId}).catch(err => console.error(err));
     }
 }
