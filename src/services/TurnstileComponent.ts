@@ -1,6 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
-import type Cloudflare from 'cloudflare';
+import Cloudflare from 'cloudflare';
 
 export interface TurnstileInputs {
     name: string;
@@ -52,7 +52,7 @@ class TurnstileProvider extends BaseProvider<TurnstileInputs, TurnstileOutputs> 
 
     public async delete(id: string, props: TurnstileOutputs): Promise<void> {
         const client = await commonHelpers.getCloudflareClient();
-        await client.turnstile.widgets.delete(props.siteKey, {account_id: props.accountId}).catch(err => console.error(err));
+        await client.turnstile.widgets.delete(props.siteKey, {account_id: props.accountId}).catch((err: any) => console.error(err));
     }
 }
 

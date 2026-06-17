@@ -1,6 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
-import type Cloudflare from 'cloudflare';
+import Cloudflare from 'cloudflare';
 
 export interface ZeroTrustPoliciesImportInputs {
     accountId: string;
@@ -36,7 +36,7 @@ class ZeroTrustPoliciesImportProvider extends BaseProvider<
             try {
                 for (const f of c.filters ?? []) {
                     const name = `${f.toUpperCase()} ${c.name}`;
-                    const existed = list.result.find(i => i.name && i.name.toLowerCase() === name.toLowerCase());
+                    const existed = list.result.find((i: any) => i.name && i.name.toLowerCase() === name.toLowerCase());
 
                     if (existed) {
                         const record = await cf.zeroTrust.gateway.rules.update(existed.id!, {

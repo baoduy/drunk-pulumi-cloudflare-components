@@ -1,6 +1,6 @@
 import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from "../base";
 import * as pulumi from "@pulumi/pulumi";
-import type Cloudflare from "cloudflare";
+import Cloudflare from "cloudflare";
 
 export interface FirewallRulesetInputs extends Pick<Cloudflare.Rulesets.RulesetCreateParams, 'rules' | 'phase'> {
     zoneId?: string;
