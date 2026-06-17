@@ -1,6 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
-import Cloudflare from 'cloudflare';
+import type Cloudflare from 'cloudflare';
 
 export interface ZeroTrustPoliciesImportInputs {
     accountId: string;
@@ -24,7 +24,7 @@ class ZeroTrustPoliciesImportProvider extends BaseProvider<
     }
 
     public async create(inputs: ZeroTrustPoliciesImportInputs): Promise<pulumi.dynamic.CreateResult> {
-        const cf = commonHelpers.getCloudflareClient();
+        const cf = await commonHelpers.getCloudflareClient();
         const account_id = inputs.accountId ?? commonHelpers.cloudflareAccountId;
         const recordIds = new Array<string>();
         if (inputs.gatewayRules.length <= 0) return {id: this.name, outs: {accountId: account_id, recordIds}};
@@ -72,7 +72,7 @@ class ZeroTrustPoliciesImportProvider extends BaseProvider<
     }
 
     public async delete(id: string, props: ZeroTrustPoliciesImportOutputs): Promise<void> {
-        const cf = commonHelpers.getCloudflareClient();
+        const cf = await commonHelpers.getCloudflareClient();
         const account_id = props.accountId ?? commonHelpers.cloudflareAccountId;
 
         if (props.recordIds.length > 0) {

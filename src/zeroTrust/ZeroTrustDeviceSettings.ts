@@ -34,7 +34,7 @@ class ZeroTrustDeviceSettingsProvider extends BaseProvider<ZeroTrustDeviceSettin
     }
 
     public async create(inputs: ZeroTrustDeviceSettingsInputs): Promise<pulumi.dynamic.CreateResult> {
-        const cf = commonHelpers.getCloudflareClient();
+        const cf = await commonHelpers.getCloudflareClient();
         await cf.zeroTrust.devices.settings.update({
             account_id: inputs.accountId,
             disable_for_time: inputs.disableForTime,
