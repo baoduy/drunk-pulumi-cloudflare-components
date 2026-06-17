@@ -21,7 +21,7 @@ class ZeroTrustGatewayCertificateActivationProvider extends BaseProvider<ZeroTru
     }
 
     public async create(inputs: ZeroTrustGatewayCertificateActivationInputs): Promise<pulumi.dynamic.CreateResult> {
-        const cf = commonHelpers.getCloudflareClient();
+        const cf = await commonHelpers.getCloudflareClient();
         const current = await cf.zeroTrust.gateway.certificates.get(inputs.certificateId, {account_id: inputs.accountId,});
 
         if (current.binding_status == "available")
