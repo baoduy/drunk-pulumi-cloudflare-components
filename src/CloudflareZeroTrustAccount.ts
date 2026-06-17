@@ -111,7 +111,7 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         this.registerOutputs();
     }
 
-    public getOutputs() {
+    public getOutputs(): pulumi.Inputs | pulumi.Output<pulumi.Inputs> {
         return {
             organization: this.organization
                 ? {

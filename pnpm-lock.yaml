@@ -9,23 +9,32 @@ importers:
   .:
     dependencies:
       '@drunk-pulumi/azure-components':
-        specifier: v1.1.35
-        version: 1.1.35(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+        specifier: v1.1.42
+        version: 1.1.42(@types/node@25.9.3)(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))
       '@pulumi/cloudflare':
-        specifier: ^6.15.0
-        version: 6.15.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+        specifier: ^6.17.0
+        version: 6.17.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/pulumi':
-        specifier: ^3.235.0
-        version: 3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+        specifier: ^3.246.0
+        version: 3.246.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/random':
-        specifier: ^4.19.2
-        version: 4.19.2(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+        specifier: ^4.21.0
+        version: 4.21.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
       cloudflare:
-        specifier: ^6.0.0
-        version: 6.0.0(encoding@0.1.13)
+        specifier: ^6.4.0
+        version: 6.4.0
+      cpy-cli:
+        specifier: ^7.0.0
+        version: 7.0.0
       lodash:
         specifier: ^4.18.1
         version: 4.18.1
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@25.9.3)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
     devDependencies:
       '@types/jest':
         specifier: ^30.0.0
@@ -37,26 +46,17 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       '@types/node':
-        specifier: 25.6.0
-        version: 25.6.0
+        specifier: 25.9.3
+        version: 25.9.3
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.59.2
-        version: 8.59.2(@typescript-eslint/parser@8.59.2(eslint@9.35.0)(typescript@6.0.3))(eslint@9.35.0)(typescript@6.0.3)
+        specifier: ^8.61.1
+        version: 8.61.1(@typescript-eslint/parser@8.61.1(eslint@9.35.0)(typescript@6.0.3))(eslint@9.35.0)(typescript@6.0.3)
       '@typescript-eslint/parser':
-        specifier: ^8.59.2
-        version: 8.59.2(eslint@9.35.0)(typescript@6.0.3)
-      cpy-cli:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.61.1
+        version: 8.61.1(eslint@9.35.0)(typescript@6.0.3)
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@types/node@25.6.0)(typescript@6.0.3)
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
 
 packages:
 
@@ -152,10 +152,6 @@ packages:
     resolution: {integrity: sha512-PgQLfcgsqVPEN8+HYs9L/9sUxd1qkUQa8csuKPFRq3twiIE5Sm1me+1tmoNp5rPCdYoBJSNzi/FYpldHlDeHDw==}
     engines: {node: '>=20.0.0'}
 
-  '@azure/keyvault-common@2.0.0':
-    resolution: {integrity: sha512-wRLVaroQtOqfg60cxkzUkGKrKMsCP6uYXAOomOIysSMyt1/YM0eUn9LqieAWM8DLcU4+07Fio2YGpPeqUbpP9w==}
-    engines: {node: '>=18.0.0'}
-
   '@azure/keyvault-common@2.1.0':
     resolution: {integrity: sha512-aCDidWuKY06LWQ4x7/8TIXK6iRqTaRWRL3t7T+LC+j1b07HtoIsOxP/tU90G4jCSBn5TAyUTCtA4MS/y5Hudaw==}
     engines: {node: '>=20.0.0'}
@@ -196,11 +192,11 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@drunk-pulumi/azure-components@1.1.35':
-    resolution: {integrity: sha512-sgTrXqXMYZAPdTL9/Njou9OQrJ9FfZcegt5BFIneMczFDqzxQLpay0PNNEtWzG7DTne9ikwEPI+hucjiu4/dqA==}
+  '@drunk-pulumi/azure-components@1.1.42':
+    resolution: {integrity: sha512-FpKVPgYvrg283PHOBNVDSf4sdy+IGe8uzhkGg5LIOU4lPidGVsPbFDz8Aw+xCYU3b0ICTWTCx2/HLWLY3l3p6g==}
 
-  '@drunk-pulumi/azure-providers@1.0.15':
-    resolution: {integrity: sha512-0FuNxzduZZ5w4uJMQsWFatuJUzfSIUa9zuNaMr1AYLw7qDEQv5mRr2c9KZdUEDl3ds1Ous/LZO74vUCFTYu+Pg==}
+  '@drunk-pulumi/azure-providers@1.0.16':
+    resolution: {integrity: sha512-mNHl+8DYWEQw2DV1Oneu29H4aC8sdw2bUp43XuAG90dEOhEIf9jl4PClvrYFIb4x/vYm4JsALSkyh5MuGp6kJQ==}
 
   '@epic-web/invariant@1.0.0':
     resolution: {integrity: sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==}
@@ -538,11 +534,14 @@ packages:
   '@pulumi/azure-native@3.17.0':
     resolution: {integrity: sha512-oOC0YKvsv2OkchpG1aGgv2nucrBdgN6FfkkLemFuBV9P6vGHFuJxllPA6GQRW7VlQ4kCwO/wDMmE5+1VzuE7Xw==}
 
-  '@pulumi/azuread@6.9.0':
-    resolution: {integrity: sha512-afSm/aXBo+tAg370kWXHBHk8w/4oxm/3GyW2JVHOMlMx6JnVJrGdiAzEk3q/AdAoJkm3zEnWFiTHu9wLthX8uA==}
+  '@pulumi/azure-native@3.19.0':
+    resolution: {integrity: sha512-ucHbfBz18VblvCe36XqLyR4ofFoPvNYYhC8oaoHKQuu9xQuFCbGGLYG9ptDvVapUNztcxcqIvz/8nD7oxUHyag==}
 
-  '@pulumi/cloudflare@6.15.0':
-    resolution: {integrity: sha512-I2C1UA//YbkuGUV5O9skIMUu94StNSE4hiAU57GFtyL7WEqAMJLvV8Vpcu1192rI1/ZwFIJeR4MbAZfiYlPFqA==}
+  '@pulumi/azuread@6.9.1':
+    resolution: {integrity: sha512-ip0+uLgmXVWqnrJkvpUMpLF7Dwy04mt/1+KY6/Gph/JeaMiNVP8kTQxq7070zM+Yqb/d2SR/6WjXwC8pkYYOJQ==}
+
+  '@pulumi/cloudflare@6.17.0':
+    resolution: {integrity: sha512-sIL1rfjNavy+yZQ/OjyFHD4owe2E/TpHLFCVsogQJOC+Y6Bj7JxrhoTfsJdxVEXEFBGlNCu68T+g9im8iEZM9A==}
 
   '@pulumi/pulumi@3.235.0':
     resolution: {integrity: sha512-rIKpDzquX2+OdP/e7wHujQ1VUYO8EXNADsua+AT2BOWpC3z0K8NB/9NYDsTSw/mfBdVz9vr0UdO7ljiKi06GSg==}
@@ -556,8 +555,20 @@ packages:
       typescript:
         optional: true
 
-  '@pulumi/random@4.19.2':
-    resolution: {integrity: sha512-ee77eUIfPMekYi9x7/3iDVIhqUcZrvXQpC8YNTRN8XKfRDuuWio4xu2CvoHeEBDOov84FumMafFqn+xSf+XlDQ==}
+  '@pulumi/pulumi@3.246.0':
+    resolution: {integrity: sha512-YvUQJatWpNpVlb6ftNvbSuS2ViCNa8LoG9FiJXtG24Rx/9leYQOMSTQ61vPeNtydGh8650lBal4pTmaB+JgkPA==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      ts-node: '>= 7.0.1 < 12'
+      typescript: '>= 3.8.3 < 7'
+    peerDependenciesMeta:
+      ts-node:
+        optional: true
+      typescript:
+        optional: true
+
+  '@pulumi/random@4.21.0':
+    resolution: {integrity: sha512-k4JHqQFOKXWkbSLZtX37xBlRsurfgZbLd1Zib0cLSDP4Dt3uTllR3CBWfMLSnXJGAoTr9MlwyHCer/5tmSaF0Q==}
 
   '@sigstore/bundle@4.0.0':
     resolution: {integrity: sha512-NwCl5Y0V6Di0NexvkTqdoVfmjTaQwoLM236r89KEojGmq/jMls8S+zb7yOwAPdXvbwfKDlP+lmXgAL4vKSQT+A==}
@@ -646,6 +657,9 @@ packages:
   '@types/node@25.6.0':
     resolution: {integrity: sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==}
 
+  '@types/node@25.9.3':
+    resolution: {integrity: sha512-603BddQMv3pUcr4U2dhujk83N2tTDVr/34wII2B6bJy6g+8WD6yUb11jszNs0gdi4PesVWl7ABt8nYMVpnLUcg==}
+
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
@@ -664,63 +678,63 @@ packages:
   '@types/yargs@17.0.33':
     resolution: {integrity: sha512-WpxBCKWPLr4xSsHgz511rFJAM+wS28w2zEO1QDNY5zM/S8ok70NNfztH0xwhqKyaK0OHCbN98LDAZuy1ctxDkA==}
 
-  '@typescript-eslint/eslint-plugin@8.59.2':
-    resolution: {integrity: sha512-j/bwmkBvHUtPNxzuWe5z6BEk3q54YRyGlBXkSsmfoih7zNrBvl5A9A98anlp/7JbyZcWIJ8KXo/3Tq/DjFLtuQ==}
+  '@typescript-eslint/eslint-plugin@8.61.1':
+    resolution: {integrity: sha512-ZPlVl3PB3et/59Ne0fv/sci6ZXz4T4Hp4nTJ56i/Y0gR89ARb+KphojTq6j+56E5PIezmOIOOWyY+aWQFd+IkQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
-      '@typescript-eslint/parser': ^8.59.2
+      '@typescript-eslint/parser': ^8.61.1
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4 <6.1.0'
 
-  '@typescript-eslint/parser@8.59.2':
-    resolution: {integrity: sha512-plR3pp6D+SSUn1HM7xvSkx12/DhoHInI2YF35KAcVFNZvlC0gtrWqx7Qq1oH2Ssgi0vlFRCTbP+DZc7B9+TtsQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
-      typescript: '>=4.8.4 <6.1.0'
-
-  '@typescript-eslint/project-service@8.59.2':
-    resolution: {integrity: sha512-+2hqvEkeyf/0FBor67duF0Ll7Ot8jyKzDQOSrxazF/danillRq2DwR9dLptsXpoZQqxE1UisSmoZewrlPas9Vw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      typescript: '>=4.8.4 <6.1.0'
-
-  '@typescript-eslint/scope-manager@8.59.2':
-    resolution: {integrity: sha512-JzfyEpEtOU89CcFSwyNS3mu4MLvLSXqnmX05+aKBDM+TdR5jzcGOEBwxwGNxrEQ7p/z6kK2WyioCGBf2zZBnvg==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@typescript-eslint/tsconfig-utils@8.59.2':
-    resolution: {integrity: sha512-BKK4alN7oi4C/zv4VqHQ+uRU+lTa6JGIZ7s1juw7b3RHo9OfKB+bKX3u0iVZetdsUCBBkSbdWbarJbmN0fTeSw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      typescript: '>=4.8.4 <6.1.0'
-
-  '@typescript-eslint/type-utils@8.59.2':
-    resolution: {integrity: sha512-nhqaj1nmTdVVl/BP5omXNRGO38jn5iosis2vbdmupF2txCf8ylWT8lx+JlvMYYVqzGVKtjojUFoQ3JRWK+mfzQ==}
+  '@typescript-eslint/parser@8.61.1':
+    resolution: {integrity: sha512-PJ5vePq5/ognBbrIcoC5+SHO5dfpeLPzP9FpLkzWrguoYQEeeSjlJpVwOpo1JRSTEi7dRcwNy4h4dzV70PqHcg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4 <6.1.0'
 
-  '@typescript-eslint/types@8.59.2':
-    resolution: {integrity: sha512-e82GVOE8Ps3E++Egvb6Y3Dw0S10u8NkQ9KXmtRhCWJJ8kDhOJTvtMAWnFL16kB1583goCWXsr0NieKCZMs2/0Q==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@typescript-eslint/typescript-estree@8.59.2':
-    resolution: {integrity: sha512-o0XPGNwcWw+FIwStOWn+BwBuEmL6QXP0rsvAFg7ET1dey1Nr6Wb1ac8p5HEsK0ygO/6mUxlk+YWQD9xcb/nnXg==}
+  '@typescript-eslint/project-service@8.61.1':
+    resolution: {integrity: sha512-PrC4JYGmR241lYnfhmKGTXkFqv8+ymbTFgSAY0fVXpY82/QkMw5TZPl+vGzuDDU2QYJk9fIDOBTntF+yDv9LEA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       typescript: '>=4.8.4 <6.1.0'
 
-  '@typescript-eslint/utils@8.59.2':
-    resolution: {integrity: sha512-Juw3EinkXqjaffxz6roowvV7GZT/kET5vSKKZT6upl5TXdWkLkYmNPXwDDL2Vkt2DPn0nODIS4egC/0AGxKo/Q==}
+  '@typescript-eslint/scope-manager@8.61.1':
+    resolution: {integrity: sha512-L2bdIeoQS8FlKAvONAr20w6OcLXeB+qiDKbAooS9A0Ben+iSIkBef0FxqwKWYqt5sa0i4KJtxVyVmhMylKzF5w==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/tsconfig-utils@8.61.1':
+    resolution: {integrity: sha512-UN/H4di+OO7EWx2ovME+8t31YO+KVnK0RRKEHR3kOt21/Ay8BOq3M1OMvWs5vNiqcFCYGYoxK3MXPZzmMUE+yg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.1.0'
+
+  '@typescript-eslint/type-utils@8.61.1':
+    resolution: {integrity: sha512-GYRicKmVK0C4fsKgaACaknOUAq9Oa2kwsjnpFhFcS/5p4Ht5IP9OVLbgIgcK4SRk92nVHFluurg1lumD9dBcLw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4 <6.1.0'
 
-  '@typescript-eslint/visitor-keys@8.59.2':
-    resolution: {integrity: sha512-NwjLUnGy8/Zfx23fl50tRC8rYaYnM52xNRYFAXvmiil9yh1+K6aRVQMnzW6gQB/1DLgWt977lYQn7C+wtgXZiA==}
+  '@typescript-eslint/types@8.61.1':
+    resolution: {integrity: sha512-G+CRlPqLv7Bz1IZVs03x5K59F1veqL0EJUROAdGhKsEq8qOiRiZbI+HUojPq5l0fEGOKModD9br6lObhB8zkoA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/typescript-estree@8.61.1':
+    resolution: {integrity: sha512-u+oQD3BqYWPc8YV9Zab4vaJElJuwOLPRc10Jm1o/qS+6Qwen14HCWwx0Seo4LnSn2wxea2Ik8DxPt2/FHmuhrg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.1.0'
+
+  '@typescript-eslint/utils@8.61.1':
+    resolution: {integrity: sha512-1+P/3Dj6jvtybE1q0HQ6yBt/gq+oKJyLdEv4HdnqasaEXRSYCAsD59mXEVQnM/ULNdQxbX77tdG4jPRjIS6knA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+      typescript: '>=4.8.4 <6.1.0'
+
+  '@typescript-eslint/visitor-keys@8.61.1':
+    resolution: {integrity: sha512-6fJ9MHWtK14C1DSkiMlHUSOmrVebL7150xZJBlJiL62jjhIA4JmOq6flwBgDxIdBKKdoiZRel+dfPD5MLfny3w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@typespec/ts-http-runtime@0.3.2':
@@ -852,8 +866,8 @@ packages:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
 
-  cloudflare@6.0.0:
-    resolution: {integrity: sha512-yZS+QvWJpe7Y5K2lPcF44xsVHKmNgeZpEN40axQ6kGiGaoc+o3L0/1Zf0NO4D1Ph1PqSxaa5QcZeTsjBBK3cBw==}
+  cloudflare@6.4.0:
+    resolution: {integrity: sha512-ZlxeoXpiQAjySZYim3p05Udpp25iWYajnCpv04leZchghTqrC3EAASbSwNftBmA6ULyuC9oqLjiMQhBRMpIYhA==}
 
   cmd-shim@8.0.0:
     resolution: {integrity: sha512-Jk/BK6NCapZ58BKUxlSI+ouKRbjH1NLZCgJkYoab+vEHUY3f6OzpNBN9u7HFSv9J6TRDGs4PLOHezoKGaFRSCA==}
@@ -948,9 +962,6 @@ packages:
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
-
-  encoding@0.1.13:
-    resolution: {integrity: sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==}
 
   env-paths@2.2.1:
     resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
@@ -1199,10 +1210,6 @@ packages:
 
   humanize-ms@1.2.1:
     resolution: {integrity: sha512-Fl70vYtsAFb/C06PTS9dZBo7ihau+Tu/DNCk/OyHhea07S+aeMWpFFkUaXRa8fI+ScZbEI8dfSxwY7gxZ9SAVQ==}
-
-  iconv-lite@0.6.3:
-    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
-    engines: {node: '>=0.10.0'}
 
   iconv-lite@0.7.2:
     resolution: {integrity: sha512-im9DjEDQ55s9fL4EYzOAv0yMqmMBSZp6G0VvFyTMPKWxiSBHUj9NW/qqLmXUwXrrM7AvqSlTCfvqRb0cM8yYqw==}
@@ -1490,10 +1497,6 @@ packages:
     resolution: {integrity: sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw==}
     engines: {node: '>=8'}
 
-  minipass@7.1.2:
-    resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
-    engines: {node: '>=16 || 14 >=14.17'}
-
   minipass@7.1.3:
     resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -1614,10 +1617,6 @@ packages:
   p-locate@5.0.0:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
-
-  p-map@7.0.3:
-    resolution: {integrity: sha512-VkndIv2fIB99swvQoA65bm+fsmt6UNdGeIB0oxBs+WhAhdh08QA04JXpI7rbB9r08/nkbysKoya9rtDERYOYMA==}
-    engines: {node: '>=18'}
 
   p-map@7.0.4:
     resolution: {integrity: sha512-tkAQEw8ysMzmkhgw8k+1U/iPhWNhykKnSk4Rd5zLoPJCuJaGRPo6YposrZgaxHKzDHdDWWZvE/Sk7hsL2X/CpQ==}
@@ -1916,6 +1915,9 @@ packages:
 
   undici-types@7.19.2:
     resolution: {integrity: sha512-qYVnV5OEm2AW8cJMCpdV20CDyaN3g0AjDlOGf1OW4iaDEx8MwdtChUp4zu4H0VP3nDRF/8RKWH+IPp9uW0YGZg==}
+
+  undici-types@7.24.6:
+    resolution: {integrity: sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==}
 
   undici@6.25.0:
     resolution: {integrity: sha512-ZgpWDC5gmNiuY9CnLVXEH8rl50xhRCuLNA97fAUnKi8RRuV4E6KG31pDTsLVUKnohJE0I3XDrTeEydAXRw47xg==}
@@ -2254,19 +2256,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/keyvault-common@2.0.0':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.10.1
-      '@azure/core-client': 1.10.1
-      '@azure/core-rest-pipeline': 1.22.2
-      '@azure/core-tracing': 1.3.1
-      '@azure/core-util': 1.13.1
-      '@azure/logger': 1.3.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
   '@azure/keyvault-common@2.1.0':
     dependencies:
       '@azure-rest/core-client': 2.5.1
@@ -2291,7 +2280,7 @@ snapshots:
       '@azure/core-rest-pipeline': 1.22.2
       '@azure/core-tracing': 1.3.1
       '@azure/core-util': 1.13.1
-      '@azure/keyvault-common': 2.0.0
+      '@azure/keyvault-common': 2.1.0
       '@azure/logger': 1.3.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -2343,25 +2332,28 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@drunk-pulumi/azure-components@1.1.35(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)':
+  '@drunk-pulumi/azure-components@1.1.42(@types/node@25.9.3)(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))':
     dependencies:
       '@azure/keyvault-certificates': 4.10.3
       '@azure/keyvault-keys': 4.10.0
       '@azure/keyvault-secrets': 4.11.2
-      '@drunk-pulumi/azure-providers': 1.0.15(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/azure-native': 3.17.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/azuread': 6.9.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/random': 4.19.2(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+      '@drunk-pulumi/azure-providers': 1.0.16(@types/node@25.9.3)
+      '@pulumi/azure-native': 3.19.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/azuread': 6.9.1(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/pulumi': 3.246.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/random': 4.21.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
       lodash: 4.18.1
       netmask: 2.1.1
       openpgp: 6.3.0
+      typescript: 6.0.3
     transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
       - supports-color
       - ts-node
-      - typescript
 
-  '@drunk-pulumi/azure-providers@1.0.15(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)':
+  '@drunk-pulumi/azure-providers@1.0.16(@types/node@25.9.3)':
     dependencies:
       '@azure/arm-apimanagement': 10.0.0
       '@azure/arm-cdn': 9.1.0
@@ -2377,14 +2369,17 @@ snapshots:
       '@azure/keyvault-keys': 4.10.0
       '@azure/keyvault-secrets': 4.11.2
       '@openpgp/web-stream-tools': 0.0.11
-      '@pulumi/azure-native': 3.17.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/azure-native': 3.17.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
       node-forge: 1.4.0
       openpgp: 6.3.0
+      ts-node: 10.9.2(@types/node@25.9.3)(typescript@6.0.3)
+      typescript: 6.0.3
     transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
       - supports-color
-      - ts-node
-      - typescript
 
   '@epic-web/invariant@1.0.0': {}
 
@@ -2459,7 +2454,7 @@ snapshots:
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   '@isaacs/string-locale-compare@1.1.0': {}
 
@@ -2790,31 +2785,39 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@pulumi/azure-native@3.17.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)':
+  '@pulumi/azure-native@3.17.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/azuread@6.9.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)':
+  '@pulumi/azure-native@3.19.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/cloudflare@6.15.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)':
+  '@pulumi/azuread@6.9.1(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/pulumi@3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)':
+  '@pulumi/cloudflare@6.17.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)':
+    dependencies:
+      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+      - typescript
+
+  '@pulumi/pulumi@3.235.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
       '@grpc/grpc-js': 1.13.4
       '@logdna/tail-file': 2.2.0
@@ -2844,14 +2847,49 @@ snapshots:
       tmp: 0.2.5
       upath: 1.2.0
     optionalDependencies:
-      ts-node: 10.9.2(@types/node@25.6.0)(typescript@6.0.3)
+      ts-node: 10.9.2(@types/node@25.9.3)(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@pulumi/random@4.19.2(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)':
+  '@pulumi/pulumi@3.246.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3))(typescript@6.0.3)
+      '@grpc/grpc-js': 1.13.4
+      '@logdna/tail-file': 2.2.0
+      '@npmcli/arborist': 9.4.3
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/exporter-trace-otlp-grpc': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/exporter-zipkin': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation-grpc': 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node': 1.30.1(@opentelemetry/api@1.9.0)
+      '@types/google-protobuf': 3.15.12
+      '@types/semver': 7.7.1
+      '@types/tmp': 0.2.6
+      execa: 5.1.1
+      fdir: 6.5.0(picomatch@4.0.3)
+      google-protobuf: 3.21.4
+      ini: 2.0.0
+      js-yaml: 3.14.2
+      minimist: 1.2.8
+      normalize-package-data: 6.0.2
+      picomatch: 4.0.3
+      require-from-string: 2.0.2
+      semver: 7.7.3
+      source-map-support: 0.5.21
+      tmp: 0.2.5
+      upath: 1.2.0
+    optionalDependencies:
+      ts-node: 10.9.2(@types/node@25.9.3)(typescript@6.0.3)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@pulumi/random@4.21.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)':
+    dependencies:
+      '@pulumi/pulumi': 3.235.0(ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3))(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -2946,6 +2984,10 @@ snapshots:
     dependencies:
       undici-types: 7.19.2
 
+  '@types/node@25.9.3':
+    dependencies:
+      undici-types: 7.24.6
+
   '@types/semver@7.7.1': {}
 
   '@types/shimmer@1.2.0': {}
@@ -2960,14 +3002,14 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.3
 
-  '@typescript-eslint/eslint-plugin@8.59.2(@typescript-eslint/parser@8.59.2(eslint@9.35.0)(typescript@6.0.3))(eslint@9.35.0)(typescript@6.0.3)':
+  '@typescript-eslint/eslint-plugin@8.61.1(@typescript-eslint/parser@8.61.1(eslint@9.35.0)(typescript@6.0.3))(eslint@9.35.0)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
-      '@typescript-eslint/parser': 8.59.2(eslint@9.35.0)(typescript@6.0.3)
-      '@typescript-eslint/scope-manager': 8.59.2
-      '@typescript-eslint/type-utils': 8.59.2(eslint@9.35.0)(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.59.2(eslint@9.35.0)(typescript@6.0.3)
-      '@typescript-eslint/visitor-keys': 8.59.2
+      '@typescript-eslint/parser': 8.61.1(eslint@9.35.0)(typescript@6.0.3)
+      '@typescript-eslint/scope-manager': 8.61.1
+      '@typescript-eslint/type-utils': 8.61.1(eslint@9.35.0)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.61.1(eslint@9.35.0)(typescript@6.0.3)
+      '@typescript-eslint/visitor-keys': 8.61.1
       eslint: 9.35.0
       ignore: 7.0.5
       natural-compare: 1.4.0
@@ -2976,41 +3018,41 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.59.2(eslint@9.35.0)(typescript@6.0.3)':
+  '@typescript-eslint/parser@8.61.1(eslint@9.35.0)(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/scope-manager': 8.59.2
-      '@typescript-eslint/types': 8.59.2
-      '@typescript-eslint/typescript-estree': 8.59.2(typescript@6.0.3)
-      '@typescript-eslint/visitor-keys': 8.59.2
+      '@typescript-eslint/scope-manager': 8.61.1
+      '@typescript-eslint/types': 8.61.1
+      '@typescript-eslint/typescript-estree': 8.61.1(typescript@6.0.3)
+      '@typescript-eslint/visitor-keys': 8.61.1
       debug: 4.4.3
       eslint: 9.35.0
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/project-service@8.59.2(typescript@6.0.3)':
+  '@typescript-eslint/project-service@8.61.1(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.59.2(typescript@6.0.3)
-      '@typescript-eslint/types': 8.59.2
+      '@typescript-eslint/tsconfig-utils': 8.61.1(typescript@6.0.3)
+      '@typescript-eslint/types': 8.61.1
       debug: 4.4.3
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/scope-manager@8.59.2':
+  '@typescript-eslint/scope-manager@8.61.1':
     dependencies:
-      '@typescript-eslint/types': 8.59.2
-      '@typescript-eslint/visitor-keys': 8.59.2
+      '@typescript-eslint/types': 8.61.1
+      '@typescript-eslint/visitor-keys': 8.61.1
 
-  '@typescript-eslint/tsconfig-utils@8.59.2(typescript@6.0.3)':
+  '@typescript-eslint/tsconfig-utils@8.61.1(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
 
-  '@typescript-eslint/type-utils@8.59.2(eslint@9.35.0)(typescript@6.0.3)':
+  '@typescript-eslint/type-utils@8.61.1(eslint@9.35.0)(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/types': 8.59.2
-      '@typescript-eslint/typescript-estree': 8.59.2(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.59.2(eslint@9.35.0)(typescript@6.0.3)
+      '@typescript-eslint/types': 8.61.1
+      '@typescript-eslint/typescript-estree': 8.61.1(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.61.1(eslint@9.35.0)(typescript@6.0.3)
       debug: 4.4.3
       eslint: 9.35.0
       ts-api-utils: 2.5.0(typescript@6.0.3)
@@ -3018,14 +3060,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/types@8.59.2': {}
+  '@typescript-eslint/types@8.61.1': {}
 
-  '@typescript-eslint/typescript-estree@8.59.2(typescript@6.0.3)':
+  '@typescript-eslint/typescript-estree@8.61.1(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/project-service': 8.59.2(typescript@6.0.3)
-      '@typescript-eslint/tsconfig-utils': 8.59.2(typescript@6.0.3)
-      '@typescript-eslint/types': 8.59.2
-      '@typescript-eslint/visitor-keys': 8.59.2
+      '@typescript-eslint/project-service': 8.61.1(typescript@6.0.3)
+      '@typescript-eslint/tsconfig-utils': 8.61.1(typescript@6.0.3)
+      '@typescript-eslint/types': 8.61.1
+      '@typescript-eslint/visitor-keys': 8.61.1
       debug: 4.4.3
       minimatch: 10.2.5
       semver: 7.7.3
@@ -3035,20 +3077,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.59.2(eslint@9.35.0)(typescript@6.0.3)':
+  '@typescript-eslint/utils@8.61.1(eslint@9.35.0)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@9.35.0)
-      '@typescript-eslint/scope-manager': 8.59.2
-      '@typescript-eslint/types': 8.59.2
-      '@typescript-eslint/typescript-estree': 8.59.2(typescript@6.0.3)
+      '@typescript-eslint/scope-manager': 8.61.1
+      '@typescript-eslint/types': 8.61.1
+      '@typescript-eslint/typescript-estree': 8.61.1(typescript@6.0.3)
       eslint: 9.35.0
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/visitor-keys@8.59.2':
+  '@typescript-eslint/visitor-keys@8.61.1':
     dependencies:
-      '@typescript-eslint/types': 8.59.2
+      '@typescript-eslint/types': 8.61.1
       eslint-visitor-keys: 5.0.1
 
   '@typespec/ts-http-runtime@0.3.2':
@@ -3149,11 +3191,11 @@ snapshots:
       fs-minipass: 3.0.3
       glob: 13.0.6
       lru-cache: 11.3.6
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-collect: 2.0.1
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
-      p-map: 7.0.3
+      p-map: 7.0.4
       ssri: 13.0.1
 
   call-bind-apply-helpers@1.0.2:
@@ -3180,7 +3222,7 @@ snapshots:
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
 
-  cloudflare@6.0.0(encoding@0.1.13):
+  cloudflare@6.4.0:
     dependencies:
       '@types/node': 18.19.124
       '@types/node-fetch': 2.6.13
@@ -3188,7 +3230,7 @@ snapshots:
       agentkeepalive: 4.6.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
-      node-fetch: 2.7.0(encoding@0.1.13)
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
 
@@ -3273,11 +3315,6 @@ snapshots:
       safe-buffer: 5.2.1
 
   emoji-regex@8.0.0: {}
-
-  encoding@0.1.13:
-    dependencies:
-      iconv-lite: 0.6.3
-    optional: true
 
   env-paths@2.2.1: {}
 
@@ -3457,7 +3494,7 @@ snapshots:
 
   fs-minipass@3.0.3:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   function-bind@1.1.2: {}
 
@@ -3555,11 +3592,6 @@ snapshots:
   humanize-ms@1.2.1:
     dependencies:
       ms: 2.1.3
-
-  iconv-lite@0.6.3:
-    dependencies:
-      safer-buffer: 2.1.2
-    optional: true
 
   iconv-lite@0.7.2:
     dependencies:
@@ -3770,7 +3802,7 @@ snapshots:
       '@npmcli/redact': 4.0.0
       cacache: 20.0.4
       http-cache-semantics: 4.2.0
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-fetch: 5.0.2
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
@@ -3813,11 +3845,11 @@ snapshots:
 
   minipass-collect@2.0.1:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   minipass-fetch@5.0.2:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-sized: 2.0.0
       minizlib: 3.1.0
     optionalDependencies:
@@ -3833,19 +3865,17 @@ snapshots:
 
   minipass-sized@2.0.0:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   minipass@3.3.6:
     dependencies:
       yallist: 4.0.0
 
-  minipass@7.1.2: {}
-
   minipass@7.1.3: {}
 
   minizlib@3.1.0:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   module-details-from-path@1.0.4: {}
 
@@ -3859,11 +3889,9 @@ snapshots:
 
   node-domexception@1.0.0: {}
 
-  node-fetch@2.7.0(encoding@0.1.13):
+  node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
-    optionalDependencies:
-      encoding: 0.1.13
 
   node-forge@1.4.0: {}
 
@@ -3924,7 +3952,7 @@ snapshots:
       '@npmcli/redact': 4.0.0
       jsonparse: 1.3.1
       make-fetch-happen: 15.0.5
-      minipass: 7.1.2
+      minipass: 7.1.3
       minipass-fetch: 5.0.2
       minizlib: 3.1.0
       npm-package-arg: 13.0.2
@@ -3974,8 +4002,6 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
-  p-map@7.0.3: {}
-
   p-map@7.0.4: {}
 
   p-timeout@6.1.4: {}
@@ -3990,7 +4016,7 @@ snapshots:
       '@npmcli/run-script': 10.0.4
       cacache: 20.0.4
       fs-minipass: 3.0.3
-      minipass: 7.1.2
+      minipass: 7.1.3
       npm-package-arg: 13.0.2
       npm-packlist: 10.0.4
       npm-pick-manifest: 11.0.3
@@ -4180,7 +4206,7 @@ snapshots:
 
   ssri@13.0.1:
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   stack-utils@2.0.6:
     dependencies:
@@ -4210,7 +4236,7 @@ snapshots:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
-      minipass: 7.1.2
+      minipass: 7.1.3
       minizlib: 3.1.0
       yallist: 5.0.0
 
@@ -4233,14 +4259,14 @@ snapshots:
     dependencies:
       typescript: 6.0.3
 
-  ts-node@10.9.2(@types/node@25.6.0)(typescript@6.0.3):
+  ts-node@10.9.2(@types/node@25.9.3)(typescript@6.0.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 25.6.0
+      '@types/node': 25.9.3
       acorn: 8.15.0
       acorn-walk: 8.3.4
       arg: 4.1.3
@@ -4270,6 +4296,8 @@ snapshots:
   undici-types@5.26.5: {}
 
   undici-types@7.19.2: {}
+
+  undici-types@7.24.6: {}
 
   undici@6.25.0: {}
 
