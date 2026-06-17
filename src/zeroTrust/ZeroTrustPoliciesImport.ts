@@ -1,6 +1,6 @@
 import * as pulumi from '@pulumi/pulumi';
 import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
-import Cloudflare from 'cloudflare';
+import type Cloudflare from 'cloudflare';
 
 export interface ZeroTrustPoliciesImportInputs {
     accountId: string;

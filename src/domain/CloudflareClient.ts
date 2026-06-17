@@ -1,4 +1,4 @@
-import Cloudflare from 'cloudflare';
+import type Cloudflare from 'cloudflare';
 import {commonHelpers} from '../base';
 
 export type EdgeCertType = {
@@ -20,12 +20,12 @@ export type OriginCertType = {
 };
 
 export class CfDomainClient {
-    private _client?: Cloudflare;
+    private _client?: commonHelpers.CloudflareApi;
     private _zone: Cloudflare.Zones.Zone | undefined;
 
     constructor(private domain: string) {}
 
-    private async client(): Promise<Cloudflare> {
+    private async client(): Promise<commonHelpers.CloudflareApi> {
         return (this._client ??= await commonHelpers.getCloudflareClient());
     }
 
