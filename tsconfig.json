@@ -46,13 +46,13 @@
     "src/services/index.ts",
     "src/services/ruleHelpers.ts",
     "src/types.ts",
-    "src/zeroTrust/ZeroAnonymousApplication.ts",
     "src/zeroTrust/ZeroTrustAccessWarp.ts",
     "src/zeroTrust/ZeroTrustApplication.ts",
     "src/zeroTrust/ZeroTrustConnectivitySettings.ts",
     "src/zeroTrust/ZeroTrustDeviceSettings.ts",
     "src/zeroTrust/ZeroTrustGatewayCertificateActivation.ts",
     "src/zeroTrust/ZeroTrustPoliciesImport.ts",
+    "src/zeroTrust/ZeroTunnelRouteConfig.ts",
     "src/zeroTrust/index.ts"
   ]
 }

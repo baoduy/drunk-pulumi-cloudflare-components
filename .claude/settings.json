@@ -1,6 +1,5 @@
 {
   "enabledPlugins": {
-    "caveman@caveman": true,
     "claude-code-setup@claude-plugins-official": true,
     "claude-smart@reflexioai": true,
     "context-mode@context-mode": true,
@@ -10,13 +9,6 @@
     "understand-anything@understand-anything": true
   },
   "extraKnownMarketplaces": {
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      },
-      "autoUpdate": true
-    },
     "context-mode": {
       "source": {
         "source": "github",

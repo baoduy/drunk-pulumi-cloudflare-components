@@ -2,7 +2,7 @@ import * as pulumi from '@pulumi/pulumi';
 import {Inputs, Output} from '@pulumi/pulumi';
 import {BaseComponent} from '../base';
 import * as cf from '@pulumi/cloudflare';
-import {PublicHostNameArgs, ZeroAnonymousApplication} from "./ZeroAnonymousApplication";
+import {PublicHostNameArgs, ZeroTunnelRouteConfig} from "./ZeroTunnelRouteConfig";
 
 type PrivateHostNameArgs = {
     fqdn: string,
@@ -19,6 +19,8 @@ export interface ZeroTrustApplicationArgs {
     info?: Partial<Omit<cf.ZeroTrustAccessApplicationArgs, 'accountId' | 'name' | 'destinations' | 'policies' | 'saasApp' | 'scimConfig' | 'zoneId' | 'type'>>,
     /** Public Apps that allow to access from internet but requires Cloudflare Authentication.*/
     publicHostNames?: Array<PublicHostNameArgs>;
+    /** Public Apps accessible from internet WITHOUT authentication. Get a tunnel ingress + DNS but are not added to the Access app destinations, so no Access policy gates them.*/
+    anonymousHostNames?: Array<PublicHostNameArgs>;
     /** Private App requires Cloudflare Tunnel to access and require Cloudflare Authentication with Company device.*/
     privateHostNames?: Array<PrivateHostNameArgs>;
     /** Private App requires Cloudflare Tunnel to access and require Cloudflare Authentication with Company device.*/
@@ -29,17 +31,17 @@ export interface ZeroTrustApplicationArgs {
 }
 
 export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs> {
-    public readonly appId: pulumi.Output<string>;
+    public readonly appId: pulumi.Output<string> | undefined;
 
     constructor(name: string, args: ZeroTrustApplicationArgs, opts?: pulumi.ComponentResourceOptions) {
         super('ZeroTrustApplication', name, args, opts);
 
         const app = this.createApp();
-        this.createPublicRoutes(app);
+        this.createTunnelRoutes(app);
         this.createPrivateRoutes(app);
         this.createPrivateHosts(app);
 
-        this.appId = app.id;
+        this.appId = app?.id;
         this.registerOutputs();
     }
 
@@ -47,13 +49,17 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
         return {appId: this.appId};
     }
 
-    private createPublicRoutes(app: cf.ZeroTrustAccessApplication) {
-        const {publicHostNames, tunnelId} = this.args;
-        if (!publicHostNames || publicHostNames.length === 0) return undefined;
+    // Single tunnel ingress config per app: Cloudflare's tunnel configuration is one
+    // full-replace document per tunnel, so public + anonymous hosts must share one resource
+    // or they overwrite each other. Anonymous hosts get ingress + DNS but no Access destination.
+    private createTunnelRoutes(app?: cf.ZeroTrustAccessApplication) {
+        const {publicHostNames, anonymousHostNames, tunnelId} = this.args;
+        const hosts = [...(publicHostNames ?? []), ...(anonymousHostNames ?? [])];
+        if (hosts.length === 0) return undefined;
 
-        return new ZeroAnonymousApplication(`${this.name}-public-routes`,
+        return new ZeroTunnelRouteConfig(`${this.name}-public-routes`,
             {
-                anonymousHosts: publicHostNames,
+                hosts,
                 tunnelId
             }, {
                 dependsOn: app,
@@ -61,8 +67,8 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
             })
     }
 
-    private createApp() {
-        const {name, info, publicHostNames, privateHostNames, privateIpAddresses, policies} = this.args;
+    private createApp(): cf.ZeroTrustAccessApplication | undefined {
+        const {name, info, publicHostNames, privateHostNames, privateIpAddresses, anonymousHostNames, policies} = this.args;
 
         const publics = publicHostNames?.map(p => ({type: 'public', uri: p.fqdn})) || [];
         const privates = privateHostNames?.map(p => ({
@@ -78,7 +84,10 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
         })) || [];
 
         if (publics.length === 0 && privates.length === 0 && privateIps.length === 0) {
-            throw new Error('At least one publicHostNames, privateHostNames, or privateIpAddresses must be provided.');
+            // No Access destinations. If anonymous hosts exist they still get tunnel routes + DNS
+            // via createTunnelRoutes, but there is no Access app to gate (that is what makes them anonymous).
+            if (anonymousHostNames && anonymousHostNames.length > 0) return undefined;
+            throw new Error('At least one publicHostNames, anonymousHostNames, privateHostNames, or privateIpAddresses must be provided.');
         }
 
         return new cf.ZeroTrustAccessApplication(this.name, {
@@ -94,7 +103,7 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
         }, {...this.opts, parent: this});
     }
 
-    private createPrivateRoutes(app: cf.ZeroTrustAccessApplication) {
+    private createPrivateRoutes(app?: cf.ZeroTrustAccessApplication) {
         const {privateIpAddresses, tunnelId, virtualNetworkId} = this.args;
         return privateIpAddresses?.map(
             (ip) =>
@@ -111,7 +120,7 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
         );
     }
 
-    private createPrivateHosts(app: cf.ZeroTrustAccessApplication) {
+    private createPrivateHosts(app?: cf.ZeroTrustAccessApplication) {
         const {privateHostNames, tunnelId} = this.args;
         return privateHostNames?.map(h => new cf.ZeroTrustNetworkHostnameRoute(`${this.name}-private-host-${h.fqdn}`, {
             accountId: this.accountId!,

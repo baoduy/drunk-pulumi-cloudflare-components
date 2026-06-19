@@ -10,8 +10,6 @@ import {
 } from '@drunk-pulumi/azure-components';
 import * as types from './types';
 import {
-    PublicHostNameArgs,
-    ZeroAnonymousApplication,
     ZeroTrustAccessWarpResource,
     ZeroTrustApplication,
     ZeroTrustApplicationArgs,
@@ -33,8 +31,8 @@ type TunnelAppArgs = Omit<ZeroTrustApplicationArgs, 'tunnelId' | 'virtualNetwork
 
 type TunnelArgs = Required<types.WithName> & {
     configSrc?: 'local' | 'cloudflare';
+    /** Anonymous (no-auth) routes are declared per-application via `applications[].anonymousHostNames`. */
     applications?: TunnelAppArgs[];
-    anonymousRoutes?: PublicHostNameArgs[];
 };
 
 export interface CloudflareZeroTrustAccountArgs extends types.WithVaultInfo {
@@ -576,19 +574,8 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         );
     }
 
-    private createTunnelAnonymousRoutes(anonymousRoutes: PublicHostNameArgs[], tunnel: cf.ZeroTrustTunnelCloudflared) {
-        return new ZeroAnonymousApplication(
-            `${this.name}-anonymous-app`,
-            {
-                anonymousHosts: anonymousRoutes,
-                tunnelId: tunnel.id,
-            },
-            {dependsOn: tunnel, parent: this},
-        );
-    }
-
     private createTunnel(
-        {name, configSrc, applications, anonymousRoutes}: TunnelArgs,
+        {name, configSrc, applications}: TunnelArgs,
         defaultVnet: cf.ZeroTrustTunnelCloudflaredVirtualNetwork,
     ) {
         const {vaultInfo} = this.args;
@@ -616,9 +603,6 @@ export class CloudflareZeroTrustAccount extends BaseComponent<CloudflareZeroTrus
         //private routes
         if (applications && applications.length > 0) {
             applications.forEach((app) => this.createTunnelApp({...app, defaultVnet, tunnel}));
-        }
-        if (anonymousRoutes && anonymousRoutes.length > 0) {
-            this.createTunnelAnonymousRoutes(anonymousRoutes, tunnel);
         }
 
         if (vaultInfo) {
