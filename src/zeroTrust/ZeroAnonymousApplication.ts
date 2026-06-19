@@ -62,7 +62,7 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
                 }],
                 zoneId: this.zoneId!,
             },
-            {...this.opts, parent: this,}));
+            {dependsOn:this.opts?.dependsOn, parent: this,}));
 
         //Create Cloudflared Config
         return new cf.ZeroTrustTunnelCloudflaredConfig(`${this.name}-public-routes`, {
@@ -82,7 +82,6 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
                 }],
             },
         }, {
-            dependsOn: dsn,
             parent: this,
         });
     }
