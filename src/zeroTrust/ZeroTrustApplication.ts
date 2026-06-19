@@ -76,6 +76,7 @@ export class ZeroTrustApplication extends BaseComponent<ZeroTrustApplicationArgs
             hostname: p.fqdn,
             portRange: p.port.toString()
         })) || [];
+        
         const privateIps = privateIpAddresses?.map(p => ({
             type: 'private',
             cidr: p.cidr,
