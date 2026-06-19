@@ -1,4 +1,4 @@
-export * from './ZeroAnonymousApplication';
+export * from './ZeroTunnelRouteConfig';
 export * from './ZeroTrustAccessWarp';
 export * from './ZeroTrustApplication';
 export * from './ZeroTrustConnectivitySettings';

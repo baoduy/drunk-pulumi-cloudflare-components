@@ -15,16 +15,16 @@ export type PublicHostNameArgs = {
     ignoreSslValidation?: boolean,
 };
 
-export interface ZeroAnonymousApplicationArgs {
-    /** Public Apps allow to access from internet and not requires any Authentication.*/
-    anonymousHosts: Array<PublicHostNameArgs>;
+export interface ZeroTunnelRouteConfigArgs {
+    /** Hosts exposed through the tunnel (DNS CNAME + ingress entry). Auth, if any, is enforced separately by an Access Application. */
+    hosts: Array<PublicHostNameArgs>;
     tunnelId: pulumi.Input<string>;
 }
 
-export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplicationArgs> {
-    constructor(name: string, args: ZeroAnonymousApplicationArgs, opts?: pulumi.ComponentResourceOptions) {
-        super('ZeroAnonymousApplication', name, args, opts);
-        this.createAnonymousRoutes();
+export class ZeroTunnelRouteConfig extends BaseComponent<ZeroTunnelRouteConfigArgs> {
+    constructor(name: string, args: ZeroTunnelRouteConfigArgs, opts?: pulumi.ComponentResourceOptions) {
+        super('ZeroTunnelRouteConfig', name, args, opts);
+        this.createRoutes();
         this.registerOutputs();
     }
 
@@ -47,12 +47,12 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
         }
     }
 
-    private createAnonymousRoutes() {
-        const {anonymousHosts, tunnelId} = this.args;
-        if (!anonymousHosts || anonymousHosts.length === 0) return undefined;
+    private createRoutes() {
+        const {hosts, tunnelId} = this.args;
+        if (!hosts || hosts.length === 0) return undefined;
 
         //create DNS
-        const dsn = anonymousHosts.map(h => new DnsRecordsResource(`${this.name}-dns-${h.fqdn}`, {
+        const dsn = hosts.map(h => new DnsRecordsResource(`${this.name}-dns-${h.fqdn}`, {
                 records: [{
                     name: h.fqdn.split(".")[0],
                     type: 'CNAME',
@@ -62,14 +62,14 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
                 }],
                 zoneId: this.zoneId!,
             },
-            {...this.opts, parent: this,}));
+            {dependsOn:this.opts?.dependsOn, parent: this,}));
 
         //Create Cloudflared Config
         return new cf.ZeroTrustTunnelCloudflaredConfig(`${this.name}-public-routes`, {
             accountId: this.accountId!,
             tunnelId,
             config: {
-                ingresses: [...anonymousHosts.map(h => ({
+                ingresses: [...hosts.map(h => ({
                     hostname: h.fqdn,
                     service: `${h.protocol}://${h.ipAddress.split("/")[0]}:${h.port ?? this.getDefaultPorts(h.protocol)}`,
                     path: h.path,
@@ -82,7 +82,6 @@ export class ZeroAnonymousApplication extends BaseComponent<ZeroAnonymousApplica
                 }],
             },
         }, {
-            dependsOn: dsn,
             parent: this,
         });
     }
