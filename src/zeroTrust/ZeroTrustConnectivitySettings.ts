@@ -1,6 +1,5 @@
 import * as pulumi from '@pulumi/pulumi';
-import {BaseOptions, BaseProvider, BaseResource,} from '../base';
-import {Cloudflare} from "cloudflare";
+import {BaseOptions, BaseProvider, BaseResource, commonHelpers} from '../base';
 
 export interface ZeroTrustConnectivitySettingsInputs {
     accountId: string;
@@ -17,8 +16,8 @@ class ZeroTrustConnectivitySettingsProvider extends BaseProvider<ZeroTrustConnec
     }
 
     public async create(inputs: ZeroTrustConnectivitySettingsInputs): Promise<pulumi.dynamic.CreateResult> {
-        const cf = new Cloudflare({apiToken: process.env.CLOUDFLARE_API_TOKEN,});
-        cf.zeroTrust.connectivitySettings.edit({
+        const cf = await commonHelpers.getCloudflareClient();
+        await cf.zeroTrust.connectivitySettings.edit({
             account_id: inputs.accountId,
             icmp_proxy_enabled: inputs.icmpProxyEnabled,
             offramp_warp_enabled: inputs.offrampWarpEnabled
