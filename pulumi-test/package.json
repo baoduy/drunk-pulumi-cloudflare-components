@@ -6,11 +6,11 @@
         "up": "pulumi up -y"
     },
     "devDependencies": {
-        "@types/node": "^24",
-        "typescript": "^5.9.2"
+        "@types/node": "^26",
+        "typescript": "^6.0.3"
     },
     "dependencies": {
-        "@pulumi/pulumi": "^3.196.0",
+        "@pulumi/pulumi": "^3.248.0",
         "@drunk-pulumi/cloudflare-components": "file://../bin"
     }
 }
