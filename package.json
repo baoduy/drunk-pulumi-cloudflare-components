@@ -15,23 +15,23 @@
   "scripts": {
     "fastBuild": "cross-env NODE_ENV=production && NODE_OPTIONS=\"--max-old-space-size=4092\" npx tsc",
     "build": "pnpm run update-tsconfig && pnpm run fastBuild && npm run copy-pkg",
-    "copy-pkg": "ts-node ./.tasks/npm-package.ts && cpy README.md bin/ && cpy PulumiPlugin.yaml bin/",
-    "update-tsconfig": "ts-node ./.tasks/update-tsconfig.ts",
+    "copy-pkg": "tsx ./.tasks/npm-package.ts && cpy README.md bin/ && cpy PulumiPlugin.yaml bin/",
+    "update-tsconfig": "tsx ./.tasks/update-tsconfig.ts",
     "update": "npx npm-check-updates -u && pnpm install",
     "test": "jest",
-    "docs": "ts-node ./.tasks/generate-docs.ts"
+    "docs": "tsx ./.tasks/generate-docs.ts"
   },
   "keywords": [],
   "author": "Steven Hoang",
   "license": "MIT",
   "dependencies": {
-    "@drunk-pulumi/azure-components": "v1.1.42",
+    "@drunk-pulumi/azure-components": "^1.1.42",
     "@pulumi/cloudflare": "^6.17.0",
-    "@pulumi/pulumi": "^3.248.0",
+    "@pulumi/pulumi": "^3.253.0",
     "@pulumi/random": "^4.21.0",
-    "cloudflare": "^6.5.0",
+    "cloudflare": "^7.0.0",
     "lodash": "^4.18.1",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.23.1",
     "typescript": "6.0.3",
     "cpy-cli": "^7.0.0"
   },
@@ -39,9 +39,9 @@
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.24",
     "@types/netmask": "^2.0.6",
-    "@types/node": "26.0.1",
-    "@typescript-eslint/eslint-plugin": "^8.62.0",
-    "@typescript-eslint/parser": "^8.62.0",
+    "@types/node": "26.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.64.0",
+    "@typescript-eslint/parser": "^8.64.0",
     "cross-env": "^10.1.0"
   },
   "prettier": {
