@@ -4,3 +4,7 @@ packages:
 allowBuilds:
   esbuild: true
   protobufjs: true
+
+minimumReleaseAgeExclude:
+  - '@pulumi/pulumi@3.256.0'
+  - tsx@4.23.6
