@@ -1,43 +1,103 @@
-<!-- gitnexus:start -->
-# GitNexus — Code Intelligence
+# CLAUDE.md
 
-This project is indexed by GitNexus as **drunk-pulumi-cloudflare-components** (501 symbols, 1086 relationships, 36 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
+## What this is
 
-## Always Do
+`@drunk-pulumi/cloudflare-components` is a TypeScript library of Pulumi components that wrap `@pulumi/cloudflare` and the Cloudflare REST API. The goal: give developers a small, opinionated config surface for Cloudflare infrastructure (Zero Trust, DNS, certs, WAF) with **secure defaults baked in**, while still letting every default be overridden. It's a sibling to `@drunk-pulumi/azure-components` (a direct dependency, used for Azure AD identity/SSO integration) and follows the same base-class conventions.
 
-- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
-- **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
-- **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
-- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
-- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
+There is a deeper set of docs already in `Skills/` (originally written for GitHub Copilot but equally useful here) — read `Skills/01-library-overview.md` through `06-build-deployment.md` for topic-specific depth (component development, Zero Trust, DNS/certs, testing, build/deploy). Treat this CLAUDE.md as the map; `Skills/*.md` as the detail.
 
-## Never Do
+**Note:** `.github/copilot-instructions.md` in this repo currently describes a *different* project (`@drunk-pulumi/azure-components`), not this one — it was likely copied by mistake. Don't rely on it for this codebase.
 
-- NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
-- NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
-- NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
-- NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
+## Commands
 
-## Resources
+```bash
+pnpm install              # install deps
+pnpm run build            # update-tsconfig -> tsc compile -> copy package.json/README/PulumiPlugin.yaml into bin/
+pnpm run fastBuild         # tsc compile only (no tsconfig regen, no package copy) — use while iterating
+npx tsc --noEmit           # type-check without emitting; fastest correctness check
+pnpm run docs              # regenerate DOCUMENTATION.md via .tasks/generate-docs.ts
+pnpm run update            # npm-check-updates -u && pnpm install
+```
 
-| Resource | Use for |
-|----------|---------|
-| `gitnexus://repo/drunk-pulumi-cloudflare-components/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/drunk-pulumi-cloudflare-components/clusters` | All functional areas |
-| `gitnexus://repo/drunk-pulumi-cloudflare-components/processes` | All execution flows |
-| `gitnexus://repo/drunk-pulumi-cloudflare-components/process/{name}` | Step-by-step execution trace |
+There is no test suite yet: `package.json` has `"test": "jest"` and `@types/jest` installed, but no `jest.config.*` and no `*.test.ts`/`__tests__` exist anywhere. Running `pnpm test` currently fails/no-ops. If you add tests, you'll need to add `jest.config.js` first — check `Skills/05-testing-validation.md` for the intended approach.
 
-## CLI
+To validate a change end-to-end, since there's no test suite:
+1. `npx tsc --noEmit` at repo root.
+2. `pnpm run build` (produces `bin/`).
+3. `cd pulumi-test && npx tsc --noEmit` — this is a separate, independent npm project (its own lockfile, not part of the pnpm workspace) that depends on the library via `file:../bin`, so it only picks up changes after step 2. It's a manual smoke-test consumer, not automated tests.
 
-| Task | Read this skill file |
-|------|---------------------|
-| Understand architecture / "How does X work?" | `.claude/skills/gitnexus/gitnexus-exploring/SKILL.md` |
-| Blast radius / "What breaks if I change X?" | `.claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md` |
-| Trace bugs / "Why is X failing?" | `.claude/skills/gitnexus/gitnexus-debugging/SKILL.md` |
-| Rename / extract / split / refactor | `.claude/skills/gitnexus/gitnexus-refactoring/SKILL.md` |
-| Tools, resources, schema reference | `.claude/skills/gitnexus/gitnexus-guide/SKILL.md` |
-| Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
+`tsconfig.json`'s `"files"` array is auto-generated by `.tasks/update-tsconfig.ts` (walks `src/`, excludes `node_modules`/`pulumi-test`/`bin`/`.tasks`) — don't hand-edit that array, it's overwritten on every `pnpm run build`.
 
-<!-- gitnexus:end -->
+## Architecture
+
+### Two base classes, everything else is built on them (`src/base/`)
+
+- **`BaseComponent<TArgs>`** (`src/base/BaseComponent.ts`) — abstract base for `pulumi.ComponentResource`. The constructor auto-prefixes the Pulumi type as `drunk:cloudflare:<Type>`, pulls `CLOUDFLARE_ACCOUNT_ID`/`CLOUDFLARE_ZONE_ID` from env into `this.accountId`/`this.zoneId` (both wrapped in `pulumi.secret()`), and requires subclasses to implement `getOutputs()`. Every composite component (`CloudflareZeroTrustAccount`, `CloudflareZone`, `ZeroTrustApplication`, ...) extends this and ends its constructor with `this.registerOutputs()`.
+- **`BaseProvider<TInputs, TOutputs>` + `BaseResource<TInputs, TOutputs>`** (`src/base/BaseProvider.ts`) — the dynamic-provider pattern for anything the official `@pulumi/cloudflare` provider doesn't support (raw REST/SDK calls). Pattern is always a pair: `XxxProvider extends BaseProvider` implements `create`/`update`/`delete`/`diff` against the Cloudflare API, `XxxResource extends BaseResource` wraps it as a `pulumi.dynamic.Resource`. Examples: `DnsRecordsResource`, `OriginCertResource`, `FirewallRulesetResource`, `ZeroTrustAccessWarpResource`, `ZeroTrustGatewayCertificateActivationResource`.
+
+### Secure-by-default, override-friendly idiom
+
+The pattern for "secure by default but easy to customize" throughout the codebase is: spread Cloudflare-recommended defaults, then spread user args over them, then re-force any field that must never be user-controlled. Example from `CloudflareZeroTrustAccount.createOrganization()` (`src/CloudflareZeroTrustAccount.ts`):
+
+```typescript
+new cf.ZeroTrustOrganization(`${this.name}-org`, {
+  accountId: this.accountId,
+  // defaults — secure/sane, but overridable
+  allowAuthenticateViaWarp: true,
+  autoRedirectToIdentity: true,
+  isUiReadOnly: false,
+  sessionDuration: '8h',
+  warpAuthSessionDuration: '24h',
+  userSeatExpirationInactiveTime: '730h',
+  ...organization, // caller overrides win here
+  authDomain: `${organization.name}.cloudflareaccess.com`, // forced, never overridable
+}, {...this.opts, parent: this});
+```
+
+The same idiom repeats for gateway settings, device settings, and device-profile IP exclusion lists (RFC1918 ranges excluded by default, narrowed via `cidr-tools` if the caller supplies `localIncludesIpAddressSpaces`). When adding a new component or option block, follow this shape rather than requiring the caller to specify everything.
+
+Composability is done by making whole sub-blocks optional rather than deeply configurable: in both top-level orchestrators, most `Args` fields are optional, and each sub-resource is only created if its corresponding arg block/flag is present (`enableAzIdentity?`, `enableDeviceIntuneIntegration?`, `tunnels?`, `dns?`, `turnstile?`, `firewallRules?`). Read the relevant `if (!x) return;` guard before adding a new optional feature block.
+
+### The two top-level orchestrators (the public entry points)
+
+- **`CloudflareZeroTrustAccount`** (`src/CloudflareZeroTrustAccount.ts`) — the big one. Composes, in roughly this order: Zero Trust organization, gateway certificate + gateway settings + connectivity + logging, device settings, device default profile (CIDR exclusion via `src/cidr-tools/`), optional Azure AD identity provider + SSO policy (via `@drunk-pulumi/azure-components`), optional Intune device-posture integration, device posture rules/policy, device enrollment policy + role + WARP access, and optional named tunnels.
+- **`CloudflareZone`** (`src/CloudflareZone.ts`) — much simpler and purely additive: `{ dns?, turnstile?, firewallRules?[] }`, each delegated to `services`/`domain` with no injected defaults.
+
+### Directory roles (`src/`)
+
+- **`zeroTrust/`** — Zero Trust building blocks consumed by `CloudflareZeroTrustAccount`: dynamic-provider resources (`ZeroTrustAccessWarp`, `ZeroTrustConnectivitySettings`, `ZeroTrustDeviceSettings`, `ZeroTrustGatewayCertificateActivation`, `ZeroTrustPoliciesImport`, `ZeroTunnelRouteConfig`) plus `ZeroTrustApplication`, a real `BaseComponent` for Access applications + policies.
+- **`domain/`** — zone/DNS/cert primitives: `CloudflareClient.ts` (raw REST client), `DnsRecords.ts` (dynamic-provider DNS management), `certificates/OriginCert.ts` (Origin CA certs).
+- **`services/`** — zone-level services consumed by `CloudflareZone`: `FirewallRuleset.ts` (WAF custom ruleset), `TurnstileComponent.ts`.
+- **`helpers/`** — small internal utility grab-bag (`accountHelper.ts`, `domainHelper.ts`, `helpersFunctions.ts`).
+- **`cidr-tools/`** — standalone, dependency-free CIDR/IP-bigint math, used only by device-profile IP exclusion logic.
+- **`types.ts`** — shared types: `AsInput<T>`/`AsOutput<T>` (deep-wrap a plain type's leaves in `pulumi.Input`/`pulumi.Output`), `WithName`/`WithVaultInfo` mixins used across `*Args` interfaces.
+
+### Public API surface (`src/index.ts`)
+
+```typescript
+export * as domain from './domain';
+export * as zeroTrust from './zeroTrust';
+export * from './services';
+export * from './CloudflareZeroTrustAccount';
+export * from './CloudflareZone';
+```
+
+`base/`, `helpers/`, `cidr-tools/`, and `types.ts` are internal — not re-exported. When adding a new component, decide whether it belongs at the flat top level (like `services`), under a namespace (like `domain`/`zeroTrust`), or stays internal.
+
+### Environment variables (required at runtime, read in `src/base/helpers.ts`)
+
+```
+CLOUDFLARE_API_TOKEN     # API authentication
+CLOUDFLARE_ACCOUNT_ID    # Account-level operations
+CLOUDFLARE_ZONE_ID       # Zone/DNS operations
+```
+
+These are read at module load and throw if missing — don't hardcode credentials or account/zone IDs in component code, always go through the env-backed helpers / `this.accountId`/`this.zoneId`.
+
+### Naming conventions
+
+- Component classes: PascalCase, one file per class, filename matches class name.
+- Args interfaces: `{ComponentName}Args`; dynamic-provider outputs: `{ComponentName}Outputs`.
+- Every `BaseComponent` subclass passes `parent: this` (or spreads `{...this.opts, parent: this}`) into child resource options to keep the Pulumi resource tree correct.
